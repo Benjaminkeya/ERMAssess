@@ -1,0 +1,54 @@
+//import Loginpage from "../Pages/Loginpage";
+// ***********************************************
+// This example commands.js shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+// Cypress.Commands.add('login', (email, password) => { ... })
+//
+//
+// -- This is a child command --
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+///<reference types="cypress"/>
+///<reference types="cypress-xpath"/>
+
+// const account = require("../fixtures/erm.json")
+
+// Cypress.Commands.add('ErmSession',()=>{
+
+// cy.session('ermassess',()=>{
+
+//     Loginpage.navigate({timeout:30000});
+//     Loginpage.setEmail(account.email);
+//     Loginpage.setPassword(account.password);
+//     Loginpage.clickLogin();
+    
+
+// })
+
+
+// })
+
+// cy.visit('/', {
+//   auth: {
+//     username: account.email,
+//     password: account.password,
+//   },
+// })
+
+
