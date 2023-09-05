@@ -10,15 +10,11 @@ class entity{
      entityBtn:()=>cy.get(".modal-footer > .btn-primary"),
      deleteentity:()=>cy.get(".btn-outline-danger"),
      confirmentityname:()=>cy.get("//input[@id='productName']"),
-     entitydeleteBtn:()=>cy.get('.btn-outline-danger'),
+     entitydeleteBtn:()=>cy.get('.btn-danger'), 
      entitydeletemodal:()=>cy.get('.modal-header'),
      confirmentityfield:()=>cy.get('#productName'),
-     entityNameValue:()=>cy.get("//small[@class='text-muted ms-1']"),
-     openEntityName:()=>{
+     entityNameValue:()=>cy.get(".modal-title > .text-muted")
 
-
-
-    }
     }
 
 
@@ -57,13 +53,22 @@ DeleteEntity()
 {    
     this.elements.deleteentity().click({force: true});
     this.elements.entitydeletemodal().click({force: true});
-    let getText;
-    this.elements.entityNameValue().then(($value) => {
-    getText = $value.text();
+    this.elements.entityNameValue().invoke('text').then((getText) => {
+      this.elements.entitydeletemodal().click({force: true});
+      this.elements.confirmentityfield().type(getText);
+      this.elements.entitydeleteBtn().click({force: true});
+    cy
+       .wait(3000)
+       .contains(getText).should('not.exist');
+      
+
+      //  cy.intercept('DELETE','https://de.ermassess.com/api/v1/facilities').as('delete');
+      //  cy.wait('@delete').its('response.status.Code').should('eq',204)
     })
-    this.elements.entitydeletemodal().click({force: true});
-    this.elements.confirmentityfield().type(getText);
-    this.elements.entitydeleteBtn().click({force: true})
+    
+    cy.location('pathname').should('eq', '/')
+
+
 }
 
 }

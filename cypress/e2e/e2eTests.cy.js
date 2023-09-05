@@ -3,8 +3,8 @@ import Organization from "../Pages/Organization"
 import Entities from "../Pages/Entities";
 const account = require("../fixtures/erm.json")
 
-describe('Home',()=>{
-
+describe('Dashboard',()=>{
+  
   beforeEach(()=>{
   Loginpage.navigate()
   Loginpage.setEmail(account.email);
@@ -33,9 +33,17 @@ describe('Home',()=>{
 
   })
   it.only('Delete Entity',()=>{
-   cy.get('a.text-decoration-none bold').click();
-   //.scrollIntoView().click({force: true});
-   Entities.DeleteEntity();
+    
+    Organization.selectOrg(); 
+    Entities.clickNewEntitybtn({timeout: 15000});
+    var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
+    Entities.setEntityName("EntityName"+randomNum);
+    Entities.setEntityAddress("EntityAddress"+randomNum);
+    Entities.selectJuris();
+    Entities.clickCreateEntitybtn();
+    cy.contains("EntityName"+randomNum).scrollIntoView().click({force: true});
+    var entityname = "EntityName"+randomNum;
+    Entities.DeleteEntity(entityname);
 
 
   

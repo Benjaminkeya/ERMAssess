@@ -35,6 +35,7 @@ this.elements.btn().click({force: true});
 verifylogin()
 {
 this.elements.lbl().should('have.text','Dashboard');
+cy.location("pathname").should("eq", "/");
 }
 
 }
