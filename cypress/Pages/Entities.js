@@ -67,6 +67,7 @@ DeleteEntity()
     })
     
     cy.location('pathname').should('eq', '/')
+    //cy.url().should('contain','/')
 
 
 }

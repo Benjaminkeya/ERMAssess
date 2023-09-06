@@ -1,4 +1,4 @@
-//import Loginpage from "../Pages/Loginpage";
+import Loginpage from "../Pages/Loginpage";
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -27,28 +27,20 @@
 ///<reference types="cypress"/>
 ///<reference types="cypress-xpath"/>
 
-// const account = require("../fixtures/erm.json")
+const account = require("../fixtures/erm.json")
+Cypress.Commands.add('login',(email,password)=>{
 
-// Cypress.Commands.add('ErmSession',()=>{
+cy.session([email,password],()=>{
 
-// cy.session('ermassess',()=>{
-
-//     Loginpage.navigate({timeout:30000});
-//     Loginpage.setEmail(account.email);
-//     Loginpage.setPassword(account.password);
-//     Loginpage.clickLogin();
+    Loginpage.navigate()
+    Loginpage.setEmail(email)
+    Loginpage.setPassword(password)
+    Loginpage.clickLogin({timout:10000})
+    Loginpage.verifylogin();
+})
     
+})
 
-// })
 
-
-// })
-
-// cy.visit('/', {
-//   auth: {
-//     username: account.email,
-//     password: account.password,
-//   },
-// })
 
 

@@ -1,4 +1,7 @@
 {
   "email": "benjamin.keya@pixeledge.io",
-  "password": "TechbJoy8*"
+  "password": "TechbJoy8*",
+  "wrongEmail":"benjamin@pixeledge.io",
+  "wrongpassword":"password!"
 }
+

@@ -7,12 +7,11 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    "watchForFileChanges":false,
-    //"pageLoadTimeout":100000,
+     "watchForFileChanges":false,
     "defaultCommandTimeout":20000,
     "scrollBehavior":false,
-    "screenshotOnRunFailure": false,
-    "video": false,
+    "experimentalStudio": true,
+    "experimentalSessionSupport": true,
     baseUrl:'https://www.ermassess.com'
   },
 
