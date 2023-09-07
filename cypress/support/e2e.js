@@ -14,15 +14,14 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 //require('./commands')
 
-require('cypress-xpath')
+require("cypress-xpath");
 
-cy.on('uncaught:exception', (err, runnable) => {
-    // Prevent Cypress from failing on uncaught exceptions
-    return false;
-  });
-
+cy.on("uncaught:exception", (err, runnable) => {
+  // Prevent Cypress from failing on uncaught exceptions
+  return false;
+});

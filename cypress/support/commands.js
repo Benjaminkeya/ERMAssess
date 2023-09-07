@@ -26,21 +26,13 @@ import Loginpage from "../Pages/Loginpage";
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 ///<reference types="cypress"/>
 ///<reference types="cypress-xpath"/>
-
-const account = require("../fixtures/erm.json")
-Cypress.Commands.add('login',(email,password)=>{
-
-cy.session([email,password],()=>{
-
-    Loginpage.navigate()
-    Loginpage.setEmail(email)
-    Loginpage.setPassword(password)
-    Loginpage.clickLogin({timout:10000})
+const account = require("../fixtures/erm.json");
+Cypress.Commands.add("login", (email, password) => {
+  cy.session([email, password], () => {
+    Loginpage.navigate();
+    Loginpage.setEmail(email, { log: false });
+    Loginpage.setPassword(password, { log: false });
+    Loginpage.clickLogin({ timout: 10000 });
     Loginpage.verifylogin();
-})
-    
-})
-
-
-
-
+  });
+});
