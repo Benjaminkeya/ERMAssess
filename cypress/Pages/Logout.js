@@ -5,10 +5,12 @@ class logout {
   };
 
   logoutuser() {
-    cy.visit("/");
     this.elements.userMenu().click({ force: true });
     this.elements.logoutBtn().click({ force: true });
-    cy.url().should("contain", "https://www.ermassess.com/login");
+    // cy.intercept("DELETE", "/api/v2/login").as("delete");
+    // cy.wait("@delete").its("response.statusCode").should("eq", 401);
+    cy.url().should("contain", "https://dev.ermassess.com/login");
+    cy.contains("Login to continue");
   }
 }
 

@@ -1,58 +1,47 @@
-class login{
+class login {
+  elements = {
+    txtEmail: () => cy.get("#email"),
+    txtPass: () => cy.get("#password"),
+    btn: () => cy.get("button[type='submit']"),
+    lbl: () => cy.get(".breadcrumb-item > span"),
+    passEye: () => cy.get(".border > .material-icons"),
+    logo: () => cy.get(".img-responsive"),
+  };
 
-   elements =
-{
-txtEmail: () => cy.get("#email"),
- txtPass: () => cy.get("#password"),
-     btn: () => cy.get("button[type='submit']"),
-     lbl: () => cy.get(".breadcrumb-item > span"),
-     passEye:()=>cy.get('.border > .material-icons')
-     //errorMessage:()=> cy.get(":nth-child(2) > p.mb-1 > small")
+  navigate() {
+    cy.visit("/", { failOnStatusCode: false });
+    cy.get(".img-responsive").should("be.visible");
+  }
 
-}
+  setEmail(email) {
+    this.elements.txtEmail().clear().type(email, { log: false });
+    //.should("have.value", email);
+  }
 
-navigate()
-{  
-    cy.visit('/');
-    
-}
+  setPassword(password) {
+    this.elements.txtPass().clear().type(password, { log: false });
+    //.should("have.value", password);
+  }
 
-setEmail(email)
-{
-    this.elements.txtEmail().clear().type(email);
-}
+  viewPassword(password) {
+    this.elements.passEye().click();
+    this.elements.txtPass().type(password, { log: false });
+    this.elements.txtPass().should("have.value", password);
+  }
 
-setPassword(password)
-{
-    this.elements.txtPass().clear().type(password);
-      
-}
+  clickLogin() {
+    this.elements.btn().click({ force: true });
+  }
 
-clickLogin()
-{
+  verifylogin() {
+    this.elements.lbl().should("have.text", "Dashboard");
+    cy.location("pathname").should("eq", "/");
+    this.elements.logo().should("be.visible");
+  }
 
-this.elements.btn().click({force: true});
-}
-
-verifylogin()
-{
-this.elements.lbl().should('have.text','Dashboard');
-cy.location("pathname").should("eq", "/");
-}
-
-assertLoginError(message)
-{
-cy.contains("These credentials did not match our records")
-}
-
-viewPassword(password,pass)
-{   
-   
-    this.elements.passEye().click()
-    this.elements.txtPass().type(password)
-    
-}
-
+  assertLoginError(message) {
+    cy.contains("These credentials did not match our records");
+  }
 }
 
 module.exports = new login();

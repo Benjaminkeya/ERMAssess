@@ -3,7 +3,8 @@ import Organization from "../Pages/Organization";
 import Entities from "../Pages/Entities";
 import Logout from "../Pages/Logout";
 import PasswordReset from "../Pages/PasswordReset";
-import { parse } from "node-html-parser";
+//import { parse } from "node-html-parser";
+import ActionItem from "../Pages/ActionItem";
 const account = require("../fixtures/erm.json");
 
 describe("Login page", () => {
@@ -16,24 +17,20 @@ describe("Login page", () => {
   });
   it("Login-Wrong Password tests", () => {
     Loginpage.navigate();
-    Loginpage.setEmail(account.wrongEmail);
-    Loginpage.setPassword(account.password);
+    Loginpage.setEmail(account.email);
+    Loginpage.setPassword(account.wrongpassword);
     Loginpage.clickLogin({ timout: 2000 });
     Loginpage.assertLoginError();
   });
 
   it("Login-Blank fields tests", () => {
     Loginpage.navigate();
-    Loginpage.setEmail("     ");
-    Loginpage.setPassword("       ");
+    Loginpage.setEmail("  ");
+    Loginpage.setPassword("  ");
     Loginpage.clickLogin({ timout: 2000 });
     cy.location("pathname", "/login");
   });
 
-  it("View password button", () => {
-    Loginpage.navigate();
-    Loginpage.viewPassword(account.password, "Techbajaoy8*");
-  });
   it("Login- Positive tests", () => {
     Loginpage.navigate();
     Loginpage.setEmail(account.email);
@@ -41,10 +38,27 @@ describe("Login page", () => {
     Loginpage.clickLogin({ timout: 2000 });
     Loginpage.verifylogin();
   });
+  it("View Password", () => {
+    Loginpage.navigate();
+    Loginpage.viewPassword("TechbJoy8*");
+  });
+
+  it("Terms of service link present", () => {
+    Loginpage.navigate();
+    cy.get("small > :nth-child(1)").should("be.visible");
+  });
+  it("Privacy Policy link present", () => {
+    Loginpage.navigate();
+    cy.get("small > :nth-child(2)").should("be.visible");
+  });
+
   it("Reset Password-registered email", () => {
+    Loginpage.navigate();
     PasswordReset.resetPass(account.email, "Success!");
   });
+
   it("Reset Password-non-registered email", () => {
+    Loginpage.navigate();
     PasswordReset.resetPass(account.wrongEmail, "Success!");
   });
 });
@@ -55,12 +69,12 @@ describe("Dashboard", () => {
   });
 
   it("Select Organization ", () => {
-    cy.visit("/");
+    Loginpage.navigate();
     Organization.selectOrg();
   });
 
   it("Create New Entity", () => {
-    cy.visit("/");
+    cy.visit("/", { failOnStatusCode: false });
     Organization.selectOrg();
     Entities.clickNewEntitybtn({ timeout: 15000 });
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
@@ -73,9 +87,18 @@ describe("Dashboard", () => {
       .click({ force: true });
     var entityname = "EntityName" + randomNum;
     Entities.DeleteEntity(entityname);
+  });
+  it.skip("test", () => {
+    Loginpage.navigate();
+    Entities.DeleteMultipleEntities();
+  });
+  it.skip("Update Entity", () => {
+    Loginpage.navigate();
+    Organization.selectOrg();
+    Entities.upDateEntity();
   });
   it("Delete Entity", () => {
-    cy.visit("/");
+    Loginpage.navigate();
     Organization.selectOrg();
     Entities.clickNewEntitybtn({ timeout: 15000 });
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
@@ -89,8 +112,16 @@ describe("Dashboard", () => {
     var entityname = "EntityName" + randomNum;
     Entities.DeleteEntity(entityname);
   });
+  it.skip("Action Item", () => {
+    Loginpage.navigate();
+    ActionItem.createActionItem();
+  });
+  // it.only("", () => {
+  //   Entities.DeleteMultipleEntities();
+  // });
 
-  it.only("Logout", () => {
+  it("Logout", () => {
+    Loginpage.navigate();
     Logout.logoutuser();
   });
 });

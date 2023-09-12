@@ -6,7 +6,6 @@ class PasswordReset {
   };
 
   resetPass(email, message) {
-    cy.visit("/");
     this.elements.forgotPassBtn().scrollIntoView().click({ force: true });
     cy.url().should("contains", "/forgot-password");
     this.elements.txtEmail().clear().type(email);
