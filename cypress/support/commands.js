@@ -1,4 +1,5 @@
 import Loginpage from "../Pages/Loginpage";
+import "cypress-iframe";
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -26,6 +27,7 @@ import Loginpage from "../Pages/Loginpage";
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 ///<reference types="cypress"/>
 ///<reference types="cypress-xpath"/>
+
 Cypress.Commands.add("login", (email, password) => {
   cy.session("erm", () => {
     Loginpage.navigate();

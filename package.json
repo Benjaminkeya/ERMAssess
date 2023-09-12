@@ -8,6 +8,7 @@
     "@shelex/cypress-allure-plugin": "^2.40.0",
     "cypress": "^13.1.0",
     "cypress-file-upload": "^5.0.8",
+    "cypress-iframe": "^1.0.1",
     "cypress-mailslurp": "^1.7.0",
     "cypress-xpath": "^2.0.1",
     "typescript": "^5.2.2"

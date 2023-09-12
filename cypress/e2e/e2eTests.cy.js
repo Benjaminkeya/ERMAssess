@@ -86,31 +86,21 @@ describe("Dashboard", () => {
       .scrollIntoView()
       .click({ force: true });
     var entityname = "EntityName" + randomNum;
-    Entities.DeleteEntity(entityname);
   });
   it.skip("test", () => {
     Loginpage.navigate();
     Entities.DeleteMultipleEntities();
   });
-  it.skip("Update Entity", () => {
+  it("Update Entity", () => {
     Loginpage.navigate();
     Organization.selectOrg();
-    Entities.upDateEntity();
+    Entities.updateEntity();
   });
-  it("Delete Entity", () => {
+  it.only("Delete Entity", () => {
     Loginpage.navigate();
     Organization.selectOrg();
-    Entities.clickNewEntitybtn({ timeout: 15000 });
-    var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
-    Entities.setEntityName("EntityName" + randomNum);
-    Entities.setEntityAddress("EntityAddress" + randomNum);
-    Entities.selectJuris();
-    Entities.clickCreateEntitybtn();
-    cy.contains("EntityName" + randomNum)
-      .scrollIntoView()
-      .click({ force: true });
-    var entityname = "EntityName" + randomNum;
-    Entities.DeleteEntity(entityname);
+
+    Entities.DeleteEntity();
   });
   it.skip("Action Item", () => {
     Loginpage.navigate();
