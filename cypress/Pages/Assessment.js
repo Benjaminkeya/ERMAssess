@@ -21,6 +21,10 @@ class assessment {
     assessProtocolDropDown: () => cy.get(".rbt-input-main"),
     protocolOption: () => cy.get("#protocol-typeahead-item-1"),
     submitBtn: () => cy.get(".modal-footer > .btn-primary"),
+    assessDeleteBtn: () => cy.get(".dropdown-menu > :nth-child(2)"),
+    assessNameValue: () => cy.get(".modal-title > .text-muted"),
+    confirmAssesName: () => cy.get("#productName"),
+    delAssessBtn: () => cy.get(".btn-danger"),
   };
 
   createAssessment(name, description) {
@@ -46,6 +50,20 @@ class assessment {
     this.elements.submitBtn().click({ force: true });
     cy.wait(3000).contains(name).should("exist");
   }
+  deleteAssessment() {
+    this.elements.selectFirstAssessment().click({ force: true });
+    this.elements.assessSettings().click({ force: true });
+    this.elements.assessDeleteBtn().click();
+    this.elements.assessmodal().click();
+    this.elements
+      .assessNameValue()
+      .invoke("text")
+      .then((getText) => {
+        this.elements.assessmodal().click({ force: true });
+        this.elements.confirmAssesName().type(getText);
+        this.elements.delAssessBtn().click({ force: true });
+        cy.wait(3000).contains(getText).should("not.exist");
+      });
+  }
 }
-
 module.exports = new assessment();

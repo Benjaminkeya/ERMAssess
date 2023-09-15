@@ -63,7 +63,7 @@ describe("Login page", () => {
   });
 });
 
-describe.only("Dashboard", () => {
+describe("Dashboard", () => {
   beforeEach(() => {
     cy.login(account.email, account.password);
   });
@@ -87,15 +87,32 @@ describe.only("Dashboard", () => {
       .click({ force: true });
     var entityname = "EntityName" + randomNum;
   });
-  it.skip("test", () => {
-    Loginpage.navigate();
-    Entities.DeleteMultipleEntities();
-  });
+
   it("Update Entity", () => {
     Loginpage.navigate();
     Organization.selectOrg();
     Entities.updateEntity();
   });
+
+  it("Create Assessment", () => {
+    Loginpage.navigate();
+    Organization.selectOrg();
+    Entities.elements.selectFirstEntity().click();
+    Assessments.createAssessment(account.Name, account.Description);
+  });
+  it("Update Assessment", () => {
+    Loginpage.navigate();
+    Organization.selectOrg();
+    Entities.elements.selectFirstEntity().click();
+    Assessments.updateAssessment(account.Name, account.Description);
+  });
+  it("Delete Assessment", () => {
+    Loginpage.navigate();
+    Organization.selectOrg();
+    Entities.elements.selectFirstEntity().click();
+    Assessments.deleteAssessment();
+  });
+
   it("Delete Entity", () => {
     Loginpage.navigate();
     Organization.selectOrg();
@@ -107,20 +124,6 @@ describe.only("Dashboard", () => {
   // Entities.DeleteEntity();
   //}
   // });
-
-  it("Create Assessment", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
-    Entities.elements.selectFirstEntity().click();
-    Assessments.createAssessment(account.Name, account.Description);
-  });
-  it.only("Update Assessment", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
-    Entities.elements.selectFirstEntity().click();
-    Assessments.updateAssessment(account.Name, account.Description);
-  });
-
   it("Logout", () => {
     Loginpage.navigate();
     Logout.logoutuser();
