@@ -3,8 +3,8 @@ import Organization from "../Pages/Organization";
 import Entities from "../Pages/Entities";
 import Logout from "../Pages/Logout";
 import PasswordReset from "../Pages/PasswordReset";
-//import { parse } from "node-html-parser";
 import ActionItem from "../Pages/ActionItem";
+import Assessments from "../Pages/Assessment";
 const account = require("../fixtures/erm.json");
 
 describe("Login page", () => {
@@ -63,7 +63,7 @@ describe("Login page", () => {
   });
 });
 
-describe("Dashboard", () => {
+describe.only("Dashboard", () => {
   beforeEach(() => {
     cy.login(account.email, account.password);
   });
@@ -96,19 +96,30 @@ describe("Dashboard", () => {
     Organization.selectOrg();
     Entities.updateEntity();
   });
-  it.only("Delete Entity", () => {
+  it("Delete Entity", () => {
     Loginpage.navigate();
     Organization.selectOrg();
 
     Entities.DeleteEntity();
   });
-  it.skip("Action Item", () => {
-    Loginpage.navigate();
-    ActionItem.createActionItem();
-  });
-  // it.only("", () => {
-  //   Entities.DeleteMultipleEntities();
+  // it.only("Delete Mulktiple Entities", () => {
+  //    //for (let i = 0; i < 7; i++) {
+  // Entities.DeleteEntity();
+  //}
   // });
+
+  it("Create Assessment", () => {
+    Loginpage.navigate();
+    Organization.selectOrg();
+    Entities.elements.selectFirstEntity().click();
+    Assessments.createAssessment(account.Name, account.Description);
+  });
+  it.only("Update Assessment", () => {
+    Loginpage.navigate();
+    Organization.selectOrg();
+    Entities.elements.selectFirstEntity().click();
+    Assessments.updateAssessment(account.Name, account.Description);
+  });
 
   it("Logout", () => {
     Loginpage.navigate();
