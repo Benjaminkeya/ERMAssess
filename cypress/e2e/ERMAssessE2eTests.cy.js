@@ -1,10 +1,9 @@
 import Loginpage from "../Pages/Loginpage";
+import PasswordReset from "../Pages/PasswordReset";
 import Organization from "../Pages/Organization";
 import Entities from "../Pages/Entities";
+import Assessments from "../Pages/Assessments";
 import Logout from "../Pages/Logout";
-import PasswordReset from "../Pages/PasswordReset";
-import ActionItem from "../Pages/ActionItem";
-import Assessments from "../Pages/Assessment";
 const account = require("../fixtures/erm.json");
 
 describe("Login page", () => {
@@ -62,20 +61,22 @@ describe("Login page", () => {
     PasswordReset.resetPass(account.wrongEmail, "Success!");
   });
 });
-
 describe("Dashboard", () => {
   beforeEach(() => {
-    cy.login(account.email, account.password);
+    Loginpage.prerequisite(account.email, account.password);
+  });
+  it("Select Organization ", () => {});
+
+  it("Create New Entity Negative", () => {
+    Entities.clickNewEntitybtn({ timeout: 15000 });
+
+    Entities.setEntityName(" ");
+    Entities.setEntityAddress(" ");
+    Entities.selectJuris();
+    cy.get(".modal-footer > .btn-primary").should("be.disabled");
   });
 
-  it("Select Organization ", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
-  });
-
-  it("Create New Entity", () => {
-    cy.visit("/", { failOnStatusCode: false });
-    Organization.selectOrg();
+  it("Create New Entity Positive", () => {
     Entities.clickNewEntitybtn({ timeout: 15000 });
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
     Entities.setEntityName("EntityName" + randomNum);
@@ -88,44 +89,50 @@ describe("Dashboard", () => {
     var entityname = "EntityName" + randomNum;
   });
 
+  it("Search Entity", () => {
+    Entities.searchEntity("EntityName");
+  });
+
   it("Update Entity", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
     Entities.updateEntity();
   });
 
-  it("Create Assessment", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
+  it("Create Assessment Positive", () => {
     Entities.elements.selectFirstEntity().click();
     Assessments.createAssessment(account.Name, account.Description);
   });
+
   it("Update Assessment", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
     Entities.elements.selectFirstEntity().click();
     Assessments.updateAssessment(account.Name, account.Description);
   });
-  it("Delete Assessment", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
+  it("Respond to Assessment questions", () => {
     Entities.elements.selectFirstEntity().click();
-    Assessments.deleteAssessment();
+    Assessments.fillAssessmentQuestions();
   });
 
-  it("Delete Entity", () => {
-    Loginpage.navigate();
-    Organization.selectOrg();
-
-    Entities.DeleteEntity();
+  it("Delete Assessment Negative", () => {
+    Entities.elements.selectFirstEntity().click();
+    Assessments.deleteAssessmentNegative("Test Assess");
   });
-  // it.only("Delete Mulktiple Entities", () => {
-  //    //for (let i = 0; i < 7; i++) {
-  // Entities.DeleteEntity();
-  //}
+  it("Delete Assessment Positive", () => {
+    Entities.elements.selectFirstEntity().click();
+    Assessments.deleteAssessmentPositive();
+  });
+  it("Delete Entity Negative", () => {
+    Entities.deleteEntityNegative("Test Text");
+  });
+  it("Delete Entity Positive", () => {
+    Entities.deleteEntityPositive();
+  });
+
+  // it.only("Delete Multiple Entities", () => {
+  //   for (let i = 0; i < 3; i++) {
+  //     Entities.deleteEntityPositive();
+  //   }
   // });
+
   it("Logout", () => {
-    Loginpage.navigate();
     Logout.logoutuser();
   });
 });

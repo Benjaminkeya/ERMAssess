@@ -1,3 +1,5 @@
+const Organization = require("./Organization");
+
 class login {
   elements = {
     txtEmail: () => cy.get("#email"),
@@ -41,6 +43,12 @@ class login {
 
   assertLoginError(message) {
     cy.contains("These credentials did not match our records");
+  }
+
+  prerequisite(email, password) {
+    cy.login(email, password);
+    this.navigate();
+    Organization.selectOrg();
   }
 }
 

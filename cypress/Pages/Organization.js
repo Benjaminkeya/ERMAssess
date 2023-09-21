@@ -1,15 +1,12 @@
-        class Orgarnization{
+class orgarnization {
+  elements = {
+    OrgDropdown: () => cy.get(".bg-primary > .dropdown-toggle"),
+    OrgItem: () => cy.contains("Benjamin Test Org"),
+  };
+  selectOrg() {
+    this.elements.OrgDropdown().click({ force: true });
+    this.elements.OrgItem().click({ force: true });
+  }
+}
 
-            elements = 
-        {
-            OrgDropdown: () => cy.get('.bg-primary > .dropdown-toggle'), 
-            OrgItem:()=> cy.contains("Sample Supplier"),  
-        }    
-        selectOrg()
-        {
-            this.elements.OrgDropdown().click({force: true});
-            this.elements.OrgItem().click({force: true});
-        }
-        }
-        
-        module.exports = new Orgarnization();
+module.exports = new orgarnization();

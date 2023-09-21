@@ -6,7 +6,6 @@ class entity {
     entityAddress: () => cy.get("#address"),
     jurisdropdown: () => cy.get(".rbt-input-wrapper .rbt-input-main"),
     choosejuris: () => cy.get("#jurisdiction-typeahead-item-0"),
-    choosejuris2: () => cy.get("#jurisdiction-typeahead-item-1"),
     entityBtn: () => cy.get(".modal-footer > .btn-primary"),
     deleteentity: () => cy.get(".btn-outline-danger"),
     updateEntity: () => cy.get("button[class='me-2 btn btn-secondary btn-sm']"),
@@ -34,7 +33,7 @@ class entity {
   }
 
   selectJuris() {
-    this.elements.jurisdropdown().click({ force: true });
+    this.elements.jurisdropdown().type("Demo");
     this.elements.choosejuris().click({ force: true });
   }
   clickCreateEntitybtn() {
@@ -48,8 +47,8 @@ class entity {
     cy.get("#name").clear().type("Name Updated Cypress test");
     cy.get("#address").clear().type("Entity address  Updated Cypress test");
     cy.get("button[aria-label='Clear']").click();
-    this.elements.jurisdropdown().click({ force: true });
-    this.elements.choosejuris2().click({ force: true });
+    this.elements.jurisdropdown().type("Benjamin");
+    this.elements.choosejuris().click({ force: true });
     cy.get(".modal-footer > .btn-primary").click(
       { force: true },
       { timeout: 3000 }
@@ -63,8 +62,14 @@ class entity {
         cy.wait(3000).contains(getText).should("exist");
       });
   }
-
-  DeleteEntity() {
+  deleteEntityNegative(text) {
+    this.elements.selectFirstEntity().click({ force: true });
+    this.elements.deleteentity().click({ force: true });
+    this.elements.entitydeletemodal().click({ force: true });
+    this.elements.confirmentityfield().type(text);
+    this.elements.entitydeleteBtn().should("exist").should("be.disabled");
+  }
+  deleteEntityPositive() {
     this.elements.selectFirstEntity().click({ force: true });
     this.elements.deleteentity().click({ force: true });
     this.elements.entitydeletemodal().click({ force: true });
@@ -80,6 +85,21 @@ class entity {
 
     cy.location("pathname").should("eq", "/");
   }
+
+  searchEntity(name) {
+    cy.get(".mb-3 > .form-control").type(name);
+    this.elements
+      .selectFirstEntity()
+      .invoke("text")
+      .then((entityName) => {
+        cy.get(
+          ":nth-child(3) > div.flex-grow-1 > .fw-bold > .text-decoration-none"
+        );
+        //if()
+        cy.expect(entityName).to.contain(name);
+      });
+  }
+  filterEntity;
   // DeleteMultipleEntities() {
   //   cy.get(
   //     ":nth-child(5) > div.flex-grow-1 > .fw-bold > .text-decoration-none"
