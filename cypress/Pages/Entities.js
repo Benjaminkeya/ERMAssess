@@ -86,7 +86,7 @@ class entity {
     cy.location("pathname").should("eq", "/");
   }
 
-  searchEntity(name) {
+  searchEntityPositive(name) {
     cy.get(".mb-3 > .form-control").type(name);
     this.elements
       .selectFirstEntity()
@@ -99,31 +99,36 @@ class entity {
         cy.expect(entityName).to.contain(name);
       });
   }
-  filterEntity;
-  // DeleteMultipleEntities() {
-  //   cy.get(
-  //     ":nth-child(5) > div.flex-grow-1 > .fw-bold > .text-decoration-none"
-  //   ).each(($item) => {
-  //     cy.wrap($item)
-  //       .invoke("text")
-  //       .then((text) => {
-  //         // Check if the item's text matches the text of the item you want to delete.
-  //         if (text.includes("EntityName")) {
-  //           // Assuming there's a delete button within each item. Replace '.delete-button' with your actual delete button selector.
-  //           cy.wrap($item).click();
-  //           this.elements.entitydeletemodal().click({ force: true });
-  //           this.elements
-  //             .entityNameValue()
-  //             .invoke("text")
-  //             .then((getText) => {
-  //               this.elements.entitydeletemodal().click({ force: true });
-  //               this.elements.confirmentityfield().type(getText);
-  //               this.elements.entitydeleteBtn().click({ force: true });
-  //               cy.location("pathname").should("eq", "/");
-  //             });
-  //         }
-  //       });
-  //   });
-  // }
+  searchEntityNegative(name) {
+    cy.get(".mb-3 > .form-control").type(name);
+    cy.get(":nth-child(2) > .mb-1 > small").should(
+      "contain",
+      "No entities found"
+    );
+  }
+  filterEntityByJurisdiction(name) {
+    cy.get(".rbt-input-main").scrollIntoView().click();
+    cy.get(".rbt-input-main").type(name);
+    cy.get("#jurisdiction-typeahead-item-0").click();
+    this.elements.selectFirstEntity().click();
+    cy.contains("Benjamin test Juris");
+  }
+  filterEntityByDateRange(date) {
+    cy.get(".react-datepicker__input-container > .form-control").click();
+    cy.get(
+      ":nth-child(5) > .react-datepicker__month > :nth-child(1) > .react-datepicker__day--001"
+    ).type(date);
+    cy.get(
+      ":nth-child(5) > .react-datepicker__month > :nth-child(1) > .react-datepicker__day--001"
+    )
+      .trigger("mouseout")
+      .click();
+
+    cy.get(".react-datepicker__input-container > .form-control")
+      .invoke("text")
+      .then((getText) => {
+        cy.expect(getText).to.include(date);
+      });
+  }
 }
 module.exports = new entity();

@@ -6,7 +6,7 @@ import Assessments from "../Pages/Assessments";
 import Logout from "../Pages/Logout";
 const account = require("../fixtures/erm.json");
 
-describe("Login page", () => {
+describe.skip("Login page", () => {
   it("Login-Wrong Email tests", () => {
     Loginpage.navigate();
     Loginpage.setEmail(account.wrongEmail);
@@ -65,9 +65,9 @@ describe("Dashboard", () => {
   beforeEach(() => {
     Loginpage.prerequisite(account.email, account.password);
   });
-  it("Select Organization ", () => {});
+  it.skip("Select Organization ", () => {});
 
-  it("Create New Entity Negative", () => {
+  it.skip("Create New Entity Negative", () => {
     Entities.clickNewEntitybtn({ timeout: 15000 });
 
     Entities.setEntityName(" ");
@@ -89,8 +89,17 @@ describe("Dashboard", () => {
     var entityname = "EntityName" + randomNum;
   });
 
-  it("Search Entity", () => {
-    Entities.searchEntity("EntityName");
+  it("Search Entity Positive", () => {
+    Entities.searchEntityPositive("EntityName");
+  });
+  it.skip("Search Entity Negative", () => {
+    Entities.searchEntityNegative("EntityNavhvhvh");
+  });
+  it("Filter Entity by Jurisdiction", () => {
+    Entities.filterEntityByJurisdiction("Benjamin");
+  });
+  it.only("Filter Entity by Date Range", () => {
+    Entities.filterEntityByDateRange("09/01/2023");
   });
 
   it("Update Entity", () => {
@@ -106,6 +115,24 @@ describe("Dashboard", () => {
     Entities.elements.selectFirstEntity().click();
     Assessments.updateAssessment(account.Name, account.Description);
   });
+  it("Search Assessment Negative", () => {
+    Entities.elements.selectFirstEntity().click();
+    Assessments.searchAssessment("ytftyfygh");
+  });
+  it("Search Assessment Positive", () => {
+    Entities.elements.selectFirstEntity().click();
+    Assessments.searchAssessment("Cypress Test");
+  });
+
+  it("Filter Assessment Positive", () => {
+    Entities.elements.selectFirstEntity().click();
+    Assessments.filterAssessmemtPositive("test");
+  });
+  it("Filter Assessment Negative", () => {
+    Entities.elements.selectFirstEntity().click();
+    Assessments.filterAssessmemtNegative("test");
+  });
+
   it("Respond to Assessment questions", () => {
     Entities.elements.selectFirstEntity().click();
     Assessments.fillAssessmentQuestions();

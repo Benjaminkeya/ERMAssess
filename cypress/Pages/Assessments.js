@@ -1,3 +1,5 @@
+const Entities = require("./Entities");
+
 class assessment {
   elements = {
     createAssessBtn: () => cy.get(".btn-primary:nth-child(1)"),
@@ -114,6 +116,40 @@ class assessment {
         this.elements.delAssessBtn().click({ force: true });
         cy.wait(3000).contains(getText).should("not.exist");
       });
+  }
+  searchAssessmentPositive(name) {
+    cy.get(".col-md-12 > .form-control").type(name);
+    this.elements
+      .selectFirstAssessment()
+      .invoke("text")
+      .then((assessName) => {
+        cy.expect(assessName).to.contain(name);
+      });
+  }
+  searchAssessmentNegative(name) {
+    cy.get(".col-md-12 > .form-control").type(name);
+    this.elements
+      .selectFirstAssessment()
+      .invoke("text")
+      .then((assessName) => {
+        cy.get(".card-body > .fade > :nth-child(2) > h5.mb-1 > small").should(
+          "contain",
+          "No assessments found"
+        );
+      });
+  }
+  filterAssessmemtPositive(name) {
+    cy.get(".rbt-input-main").scrollIntoView().click();
+    cy.get("#protocol-typeahead-item-1").click();
+    cy.contains(name).should("exist");
+  }
+  filterAssessmemtNegative(name) {
+    cy.get(".rbt-input-main").scrollIntoView().click();
+    cy.get("#protocol-typeahead-item-0").click();
+    cy.get(".card-body > .fade > :nth-child(2) > h5.mb-1 > small").should(
+      "contain",
+      "No assessments found"
+    );
   }
 }
 module.exports = new assessment();
