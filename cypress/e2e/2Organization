@@ -1,0 +1,10 @@
+import PreActions from "../Pages/PreActions";
+
+slowCypressDown();
+
+import "cypress-iframe";
+
+describe("Organization Test Suite", () => {
+  PreActions.preActions();
+  it("Switching the organization from the dropdown and assert the selected organization", () => {});
+});

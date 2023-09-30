@@ -1,17 +1,15 @@
-class logout {
+class Logout {
   elements = {
     userMenu: () => cy.get("#collasible-nav-dropdown"),
     logoutBtn: () => cy.get('[href="/logout"]'),
   };
 
-  logoutuser() {
+  logoutUser(message) {
     this.elements.userMenu().click({ force: true });
     this.elements.logoutBtn().click({ force: true });
-    // cy.intercept("DELETE", "/api/v2/login").as("delete");
-    // cy.wait("@delete").its("response.statusCode").should("eq", 401);
-    cy.url().should("contain", "https://dev.ermassess.com/login");
-    cy.contains("Login to continue");
+    cy.url().should("contain", "/login");
+    cy.contains(message);
   }
 }
 
-module.exports = new logout();
+module.exports = new Logout();

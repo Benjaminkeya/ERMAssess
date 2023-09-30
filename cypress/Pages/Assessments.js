@@ -1,55 +1,57 @@
 const Entities = require("./Entities");
 
-class assessment {
+class Assessment {
   elements = {
     createAssessBtn: () => cy.get(".btn-primary:nth-child(1)"),
-    assessmodal: () => cy.get(".modal-header"),
+    assessModal: () => cy.get(".w-fixed-640 > .border-bottom"),
     nameField: () => cy.get("#name"),
     descriptionField: () => cy.get("#description"),
-    createBtn: () => cy.get(".modal-footer > .btn-primary"),
+    createAsessBtn: () =>
+      cy.get("form > .d-flex > :nth-child(2) > .btn-primary"),
     selectFirstAssessment: () => cy.get(".text-decoration-none"),
-    assessSettings: () =>
-      cy.xpath(
-        "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[3]/button[1]/span[1]"
-      ),
-    assessUpdateBtn: () => cy.get(".dropdown-menu > :nth-child(1)"),
+    assessSettings: () => cy.xpath("//span[normalize-space()='settings']"),
+    updateBtn1: () => cy.get(".dropdown-menu > :nth-child(1)"),
     createAssessDropDown: () =>
       cy.xpath(
         "//div[@class='mb-3']//div[@class='rbt']//div//input[@placeholder='Filter by protocol']"
       ),
     assessProtocolDropDown: () => cy.get(".rbt-input-main"),
     protocolOption: () => cy.get("#protocol-typeahead-item-0"),
-    submitBtn: () => cy.get(".modal-footer > .btn-primary"),
+    clearProtocolBtn: () => cy.get("button[aria-label='Clear']"),
+    updateBtn2: () =>
+      cy.get("form > .d-flex > :nth-child(2) > .btn-primary").click(),
     assessDeleteBtn: () => cy.get(".dropdown-menu > :nth-child(2)"),
     assessNameValue: () => cy.get(".modal-title > .text-muted"),
     confirmAssesName: () => cy.get("#productName"),
     delAssessBtn: () => cy.get(".btn-danger"),
     invalidFeedback: () => cy.get(".invalid-feedback"),
+    message: () =>
+      cy.get(".card-body > .fade > :nth-child(2) > h5.mb-1 > small"),
   };
 
   createAssessment(name, description) {
-    this.elements.createAssessBtn().click();
-    this.elements.assessmodal().click();
+    this.elements.createAssessBtn().click({ force: true });
+    this.elements.assessModal().click({ force: true });
     this.elements.nameField().type(name);
-    this.elements.descriptionField().type(description);
     this.elements.createAssessDropDown().click({ force: true });
-    cy.get("#protocol-typeahead-item-0").click();
-    this.elements.createBtn().click();
+    this.elements.protocolOption().click({ force: true });
+    this.elements.descriptionField().type(description);
+    this.elements.createAssessBtn().click({ force: true });
     cy.wait(3000).contains(name).should("exist");
   }
 
   updateAssessment(name, description) {
     this.elements.selectFirstAssessment().click({ force: true });
-    this.elements.assessSettings().click({ force: true });
-    this.elements.assessUpdateBtn().click();
-    this.elements.assessmodal().click();
+    this.elements.assessSettings().scrollIntoView().click({ force: true });
+    this.elements.updateBtn1().click({ force: true });
+    this.elements.assessModal().click({ force: true });
     this.elements.nameField().clear().type(name);
-    cy.get("button[aria-label='Clear']").click();
+    this.elements.clearProtocolBtn().click();
     this.elements.assessProtocolDropDown().type("Benjamin");
     this.elements.protocolOption().click({ force: true });
     this.elements.descriptionField().clear().type(description);
-    this.elements.submitBtn().click({ force: true });
-    cy.wait(3000).contains(name).should("exist");
+    this.elements.updateBtn2().click({ force: true });
+    cy.contains(name).should("exist");
   }
 
   fillAssessmentQuestions() {
@@ -132,10 +134,7 @@ class assessment {
       .selectFirstAssessment()
       .invoke("text")
       .then((assessName) => {
-        cy.get(".card-body > .fade > :nth-child(2) > h5.mb-1 > small").should(
-          "contain",
-          "No assessments found"
-        );
+        this.elements.message().should("contain", "No assessments found");
       });
   }
   filterAssessmemtPositive(name) {
@@ -152,4 +151,4 @@ class assessment {
     );
   }
 }
-module.exports = new assessment();
+module.exports = new Assessment();

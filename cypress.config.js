@@ -1,14 +1,16 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  // env: {
+  //   commandDelay: 1000,
+  // },
   experimentalModifyObstructiveThirdPartyCode: true,
   chromeWebSecurity: false,
   defaultCommandTimeout: 30000,
   requestTimeout: 30000,
   watchForFileChanges: false,
   scrollBehavior: false,
-  // experimentalStudio: true,
-  // experimentalSessionSupport: true,
+
   video: false,
 
   e2e: {
@@ -17,4 +19,5 @@ module.exports = defineConfig({
     },
     baseUrl: "https://dev.ermassess.com",
   },
+  includeShadowDom: true,
 });
