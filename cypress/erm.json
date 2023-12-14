@@ -1,7 +1,7 @@
 {
   
-  "email": "benjamin.keya@pixeledge.io",
-  "password": "Benjamin@1",
+  "email": "",
+  "password": "",
   "wrongEmail":"",
   "wrongpassword":"",
   "Name":"Cypress Test Name",
