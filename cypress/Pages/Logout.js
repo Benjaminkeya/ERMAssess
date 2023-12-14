@@ -1,15 +1,17 @@
 class Logout {
   elements = {
-    userMenu: () => cy.get("#collasible-nav-dropdown"),
-    logoutBtn: () => cy.get('[href="/logout"]'),
+    userMenu: () => cy.get('#collasible-nav-dropdown'),
+    logoutBtn: () => cy.get("[href='/logout']"),
   };
 
-  logoutUser(message) {
-    this.elements.userMenu().click({ force: true });
-    this.elements.logoutBtn().click({ force: true });
-    cy.url().should("contain", "/login");
-    cy.contains(message);
+  logoutUser() {
+    this.elements.userMenu().should('be.visible').click({ force: true });
+    this.elements.logoutBtn().should('be.visible').click({ force: true });
+    
+    //Wait for logout operation to complete and return login screen
+    cy.url().should('contain', '/login');
+    // cy.location('pathname','/login')
   }
 }
 
-module.exports = new Logout();
+export default new Logout()

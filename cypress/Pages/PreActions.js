@@ -1,11 +1,17 @@
-const Organization = require("./Organization");
-const Loginpage = require("./LoginPage");
+const Organization = require('./Organization');
+const Loginpage = require('./LoginPage');
+const account = require('../fixtures/erm.json')
 
 class PreActions {
-  preActions(email, password) {
-    cy.login(email, password);
+  preActions() {
+    cy.login(account.email, account.password)
     Loginpage.navigate();
     Organization.switchOrg();
+    cy.intercept('GET','**/*').as('allPageContentLoaded')
+    //wait for all page elements to load
+    cy.wait('@allPageContentLoaded');
   }
 }
-module.exports = new PreActions();
+export default new PreActions()
+
+

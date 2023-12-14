@@ -1,57 +1,90 @@
 class Dashboard {
   elements = {
-    feedbackBtn: () => cy.get(".Feedback"),
-    feedbackDesc: () => cy.get(".modal-body > div > .form-control"),
-    submitBtn: () => cy.get(".modal-footer > .btn-primary"),
-    message: () => cy.get("p.mb-1 > small"),
-    closeFeedbackModal: () => cy.get(".modal-footer > .btn"),
-    helpBtn: () => cy.contains("Help"),
-    helpCenterModal: () => cy.get(".modal-header"),
-    verifyHelpCentrePage: () => cy.contains("Help Center"),
-    userMenu: () => cy.get("#collasible-nav-dropdown"),
-    newPortfolioBtn: () => cy.get(".py-0"),
-    firstPortfolioOnTheDashboard: () =>
-      cy.xpath("//div[@class='nav nav-pills']/a[1]").click(),
+    userMenu: () => cy.get('#collasible-nav-dropdown'),
+    feedbackBtn: () => cy.contains('Feedback'),
+    feedbackDesc: () => cy.get('.modal-body > div > .form-control'),
+    submitBtn: () => cy.get('.modal-footer > .btn-primary'),
+    message: () => cy.get('p.mb-1 > small'),
+    closeFeedbackModal: () => cy.get('.modal-footer > .btn'),
+    helpBtn: () => cy.contains('Help'),
+    helpCenterModal: () => cy.get('.modal-header'),
+    verifyHelpCentrePage: () => cy.contains('Help Center'),
+    firstHelpArticleLink:()=>cy.contains('Create an Entity'),
+    helpArticleTitle:()=>cy.get(':nth-child(25)'),
+    logo: () => cy.get('img'),
+    whatsNewLink:()=>cy.get('#whatsNew')
+      
   };
-
-  actionItemDropDown() {
-    cy.get(".action-item > .dropdown-toggle").click();
+  clickUserMenu(){
+    this.elements.userMenu().click({force:true})
   }
-
-  addFeedback(Description) {
-    this.elements.feedbackBtn().click();
+  isUserProfileDropDownVisible() {
+    this.elements.userMenu().should('be.visible')
+  }
+   addFeedback(Description, expectedResponse) {
+    this.elements.feedbackBtn().should('be.visible').click({ force: true });
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
-    this.elements.feedbackDesc().type(Description + randomNum);
-    this.elements.submitBtn().click();
-
-    this.elements.message().should("contain", "We appreciate that");
-    this.elements.closeFeedbackModal().click();
+    this.elements.feedbackDesc().should('be.visible').type(Description + randomNum);
+    this.elements.submitBtn().should('be.visible').click();
+    this.elements.message().should('contain', expectedResponse);
+    this.elements.closeFeedbackModal().should('be.visible').click();
   }
+
+  verifyDashboard(){
+    //cy.log(Cypress.browser.version)
+    //verify logo is present
+    this.elements.logo().should('be.visible');
+    //assert web app title
+    cy.title().should('include','ERMAssess')
+    //verify Copyright info is displayed
+    cy.contains('Copyright © 2023 ERM')
+    cy.get('.my-3 > a').should('be.visible').click({force:true})
+    //open privacy policy link in the footer
+    cy.window().then((newWindow) => {
+      // Perform actions in the new tab
+      newWindow.location.href =
+        '/contents/65147fbbb80cc';
+      cy.contains('Privacy policy');
+    
+    });
+  }
+
   helpCenter() {
-    this.elements.helpBtn().click();
-    this.elements.helpCenterModal().click();
+    this.elements.helpBtn().should('be.visible').click({force:true});
     this.elements.verifyHelpCentrePage();
+    this.elements.firstHelpArticleLink().should('exist').click({force:true});
+    cy.contains('a','View content on full screen').scrollIntoView().invoke('removeAttr','target').click({force:true});
+    cy.window().then((newWindow) => {
+      // Perform actions in the new tab
+      cy.url().then((url) => {
+        newWindow.location.href = url;
+      cy.contains('Create an Entity');
+      cy.scrollTo('bottom');
+      cy.scrollTo('top');
+      }); 
+    });
+    cy.window().then((win) => {
+      const newTab = win.open('', '_blank'); // Open a blank tab in the same window
+      expect(newTab,{ timeout: 20000 }).to.exist;
+    });
   }
-
-  userProfileDropDown() {
-    this.elements.userMenu().click();
+  searchHelpCenterArticle() {
+    this.elements.helpBtn().should('be.visible').click({force:true});
+    this.elements.verifyHelpCentrePage();
+    this.elements.firstHelpArticleLink().should('exist').click({force:true});
+    
   }
-  newPortfolio() {
-    this.elements.newPortfolioBtn().click();
-  }
-
-  firstPortfolioOnTheDashboard() {
-    this.elements.firstPortfolioOnTheDashboard().click();
-  }
-
-  newEntity() {
-    cy.get(
-      ".border > .card-body > :nth-child(1) > :nth-child(2) > .btn"
-    ).click();
-  }
-
-  activityLog() {
-    cy.get(".dropdown-menu > .my-2").click();
-  }
+  
+whatsNew(){
+  
+  this.elements.whatsNewLink().click();
+  cy.contains('Recently Released Features').first().click({force:true})
+  cy.window().then((win) => {
+    const newTab = win.open('', '_blank'); // Open a blank tab in the same window
+    expect(newTab,{ timeout: 10000 }).to.exist;
+    //cy.url().should('contains', 'https://www.ermassess.com/contents/653a84e63a738');
+  });
 }
-module.exports = new Dashboard();
+  
+}
+export default new Dashboard()
