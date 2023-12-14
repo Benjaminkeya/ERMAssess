@@ -1,7 +1,6 @@
 var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
 class Portfolio {
   elements = {
-
     firstPortfolioOnTheDashboard: () =>cy.xpath("//div[@class='nav nav-pills']/a[1]"),
     newPortfolioBtn: () => cy.get('.py-0'),
     portfolioInnerText:()=>cy.get('.rbt-token-label'),
@@ -14,10 +13,9 @@ class Portfolio {
     saveBtn: () => cy.contains('button','Save'),
     delPortfolioBtn1: () => cy.get(':nth-child(2) > .ms-3'),
     delPortfolioBtn2: () => cy.get('.btn-danger'),
-    copyEntityName: () => cy.get('.modal-title > .text-muted'),
+    copyPortfolioName: () => cy.get('.modal-title >.text-muted'),
     confirmPortfolioName: () => cy.get('#productName'),
   };
-
 
   clickFirstPortfolioOnTheDashboard() {
     this.elements.firstPortfolioOnTheDashboard().click({force:true});
@@ -40,18 +38,17 @@ class Portfolio {
     this.setPortfolioName(name + randomNum);
     this.setDescriptionField(desc);
     this.clickCreatePortfolioBtn({ force: true });
-
   }
 
   managePortfolio(name) {
     this.clickFirstPortfolioOnTheDashboard();
-    this.elements.managePortfolioBtn().should('be.visible').click({force:true});
+    this.elements.managePortfolioBtn().click({force:true});
     this.setPortfolioName(name + randomNum);
-    this.elements.selectEntityField().should('be.visible').click({force:true});
-    this.elements.firstEntity().should('be.visible').click({force:true});
-    this.elements.portfolioInnerText().should('be.visible').then((portfolio)=>{
+    this.elements.selectEntityField().click({force:true});
+    this.elements.firstEntity().click({force:true});
+    this.elements.portfolioInnerText().then((portfolio)=>{
       let port = portfolio.text()
-    this.elements.saveBtn().should('be.visible').click({force:true});
+    this.elements.saveBtn().click({force:true});
     this.clickFirstPortfolioOnTheDashboard();
     cy.contains(port)
     })
@@ -59,11 +56,10 @@ class Portfolio {
   }
   deletePortfolio() {
     this.clickFirstPortfolioOnTheDashboard();
-    cy.wait(6000)
-    this.elements.delPortfolioBtn1().should('not.be.disabled', { timeout: 20000 }).click({force:true});
-    this.elements.copyEntityName().then((portfolioName) => {
+    this.elements.delPortfolioBtn1().should('be.enabled').click({force:true});
+    this.elements.copyPortfolioName().should('be.visible').then((portfolioName) => {
       let portfolio = portfolioName.text();
-      this.elements.confirmPortfolioName().type(portfolio, { delay:0 })
+      this.elements.confirmPortfolioName().type(portfolio, { delay:0 });
       this.elements.delPortfolioBtn2().should('be.enabled').click({force:true});
     });
   }

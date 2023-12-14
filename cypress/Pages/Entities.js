@@ -2,7 +2,7 @@ var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
 class Entity {
   elements = {
     newEntityBtn: () => cy.get("button[class='btn btn-primary btn-sm']"),
-    entityName: () => cy.get('#name'),
+    entityName: () => cy.get("input[id='name']"),
     entityAddress: () => cy.get('#address'),
     tag:()=>cy.get(':nth-child(3) > .rbt > .rbt-input-multi'),
     firstTag:()=>cy.get('#entityTags-item-0'),
@@ -30,24 +30,23 @@ class Entity {
     jurisFilterDate: () =>cy.get('.react-datepicker__input-container > .form-control'),
     dateModal: () => cy.get('.react-datepicker'),
     assessmentsBtn:()=>cy.get('.mx-2'),
-   
-  };
+  }
 
   clickNewEntitybtn() {
     this.elements.newEntityBtn().should('be.visible').click({ force: true });
-    
   }
 
   setEntityName(name) {
-    this.elements.entityName().should('be.visible').clear().type(name,{delay:0});
+    this.elements.entityName().clear().type(name,{delay:0});
   }
+
   setEntityAddress(address) {
-    this.elements.entityAddress().should('be.visible').type(address,{delay:0});
+    this.elements.entityAddress().type(address,{delay:0});
   }
 
   selectJuris(jurisdiction) {
-    this.elements.jurisDropdown().should('be.visible').type(jurisdiction,{delay:0});
-    this.elements.chooseJuris1().should('be.visible').click({ force: true });
+    this.elements.jurisDropdown().type(jurisdiction,{delay:0});
+    this.elements.chooseJuris1().click({ force: true });
   }
 
   createEntity(entityName, entityAddress,jurisdiction,enabled) {
@@ -70,27 +69,32 @@ class Entity {
     }
       })
   }
+
   updateEntity(name,address,jurisdiction,desc) {
-    this.elements.updateEntityBtn1().should('be.visible').click()
+    this.elements.updateEntityBtn1().should('be.visible').as('button')
+    cy.get('@button').click({force:true})
     this.setEntityName(name + randomNum);
-    this.elements.entityAddress().should('be.visible').clear().type(address + randomNum,{delay:0});
-    this.elements.clearJurisBtn().should('be.visible').click();
+    this.elements.entityAddress().clear().type(address + randomNum,{delay:0});
+    this.elements.clearJurisBtn().click({force:true});
     this.selectJuris(jurisdiction)
-    this.elements.entityDesc().should('be.visible').clear().type(desc,{delay:0})
-    this.elements.locationAndContactInfoTab().should('be.visible').click()
-    this.elements.advancedInfoTab().should('be.visible').click()
-    this.elements.updateEntityBtn2().should('be.visible').click({ force: true }, { timeout: 3000 });
+    this.elements.entityDesc().clear().type(desc,{delay:0})
+    this.elements.locationAndContactInfoTab().click()
+    this.elements.advancedInfoTab().click({force:true})
+    this.elements.updateEntityBtn2().should('be.enabled').click({ force: true }, { timeout: 3000 });
     cy.contains(name).should('exist');
   }
+
   openEntityAssessments(){
-    this.elements.assessmentsBtn().should('be.visible').click()
+    this.elements.assessmentsBtn().should('be.visible').click({force:true})
     cy.get('h1').should('contain','Assessment')
   }
+
   deleteEntityNegative(text) {
     this.elements.delEntity().should('be.visible').click({ force: true });
     this.elements.confirmEntityfield().should('be.visible').type(text,{delay:0});
     this.elements.entitydeleteBtn().should('exist').should('be.disabled');
   }
+
   deleteEntityPositive() {
         this.elements.delEntity().should('be.visible').click({ force: true });
         //Confirm Entity name to delete 
@@ -105,19 +109,19 @@ class Entity {
           });
         //verify user is redirected to the dashboard
         cy.location('pathname').should('eq', '/');
-
       }  
 
   searchEntityPositive(name) {
     this.elements.entitySearchField().should('be.visible').scrollIntoView().type(name,{delay:0});
     cy.contains(name).should('exist');
   }
+
   searchEntityNegative(name) {
     this.elements.entitySearchField().should('be.visible').scrollIntoView().type(name,{delay:0});
     cy.contains('No entities found');
   }
   
-  filterEntityByDateRangeAndJurisdiction(name) {
+  filterEntities(name) {
     const today = new Date();
     // Format the date as MM/DD/YYYY
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -132,11 +136,8 @@ class Entity {
     this.elements.filterByJurisDropdown().should('be.visible').type(name,{delay:0});
     this.elements.chooseJuris2().should('be.visible').click({force:true});
     //verify search results has only today's date  and entity name as filtered
-    cy.xpath("//tbody[@class='table-group-divider']//tr[1]/td[1]/p//a").click({force:true})
+    cy.xpath("//tbody[@class='table-group-divider']//tr[1]/td[1]/p/a").click({force:true})
     cy.contains(name)
-    //cy.contains(formattedYYDate)
-    
-   
   }
 }
 export default new Entity

@@ -234,11 +234,10 @@ class Assessment {
     this.clickExpandSectionBtn()
     this.elements.sectionNABtn().click({force:true}),
     cy.wait(2000)
-    this.elements.selectQsn2().should('exist').click({force:true})
+    this.elements.selectQsn().should('exist').click({force:true})
     this.elements.riskBtns().should('be.disabled')
-    this.elements.complianceBtns().should('be.disabled')
+    this.elements.complianceBtn().should('be.disabled')
     this.elements.conformityBtn().should('be.disabled')
-
   }
   
   markAuditQuestionNA(){
@@ -252,13 +251,12 @@ class Assessment {
     this.elements.riskBtns().should('be.disabled')
     this.elements.complianceBtns().should('be.disabled')
     this.elements.conformityBtn().should('be.disabled')
-
   }
+
   showHideComplianceQuestions(){
     this.clickToOpenAssessment()
     this.elements.showComplianceQsnsBtn().click({force:true})
     this.elements.sectionExpandBtn().should('not.exist')
-
   }
 
   uploadFilesToAuditQsns(desc){
@@ -275,9 +273,9 @@ class Assessment {
         .invoke('text')
         .then((fileCount) => {
           expect(fileCount).to.have.length.of.at.least(1);
-        });
-       
+        });    
   }
+
   addGeoatagToQsn(title){
     this.clickToOpenAssessment()
     this.clickExpandSectionBtn()
@@ -303,8 +301,8 @@ class Assessment {
     cy.get(':nth-child(19) > .mb-0 > .material-icons-outlined').click({force:true}) 
     cy.get('[title="Map View"]').click({force:true})
     cy.get(':nth-child(9) > .gm-control-active').should('be.visible')
-
   }
+
   exportGeotag(name){
     this.clickToOpenAssessment()
     this.elements.selectQsn().click({force:true})
@@ -312,6 +310,7 @@ class Assessment {
     this.elements.exportGeotagBtn().click()
     cy.verifyDownload(name + randomNum +'.csv')
   }
+
   updateGeotag(title){
     this.clickToOpenAssessment()
     this.elements.selectQsn().click({force:true})
@@ -321,8 +320,8 @@ class Assessment {
     cy.contains('button','Next').click({force:true})
     cy.xpath("(//button[@class='btn btn-primary btn-sm'])").click({force:true})
     cy.contains(title + '' + randomNum)
-
   }
+
   deleteGeotag(){
     this.clickToOpenAssessment()
     this.elements.selectQsn().click({force:true})
@@ -330,7 +329,6 @@ class Assessment {
     cy.get(':nth-child(1) > :nth-child(1) > .mb-1 > .text-end > .btn-outline-danger > .material-icons').click({force:true})
     cy.contains('The Geo Location has been deleted successfully')
   }
-
 
   assessmentBulkFileUpload(desc){
     this.clickToOpenAssessment()
@@ -349,7 +347,6 @@ class Assessment {
     cy.contains('file-sample2.pdf')
     cy.contains('file-sample3.pdf')
   }
-  
 
   updatefileDescription(desc){
     this.clickToOpenAssessment()
@@ -362,6 +359,7 @@ class Assessment {
       expect(description).to.have.string(desc)
     })
   }
+  
   deleteBulkUploadedFile(){
     this.clickToOpenAssessment()
     cy.intercept('GET','**/*').as('allRequests')
@@ -373,23 +371,20 @@ class Assessment {
     cy.wait('@deleteRequest')
     cy.contains('The file has been deleted successfully')
   }
-
   
   searchAssessment(name) {
     this.elements.assessSearchField().should('be.visible').type(name + randomNum,{delay:0});
     cy.wait(2000)
-      cy.clickTableLink(1,1)
+      this.clickToOpenAssessment()
         cy.contains(name + randomNum);
       }
    
-
   filterAssessment(name,protocol){
     this.elements.protocolFilterBtn().should('be.visible').scrollIntoView().type(protocol,{delay:0});
     this.elements.protocolOption().should('be.visible').click({force:true});
     cy.wait(2000)
     cy.contains(name).should('exist');
   }
-  
   
   deleteAssessmentPositive(name) {
     this.elements.assessDeleteBtn().should('be.visible').click({force:true});

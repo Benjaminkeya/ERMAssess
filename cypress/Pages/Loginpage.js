@@ -34,18 +34,17 @@ class LoginPage {
   clickLogin() {
     this.elements.loginBtn().should('be.visible').click({force: true });
   }
+
   login(email,password){ 
     this.setEmail(email);
     this.setPassword(password);
     this.clickLogin();
-    
   }
   
   verifyLoginPage(){
     this.elements.LoginPageLogo().should('be.visible');
     this.elements.copyrightText().should('be.visible');
     this.elements.appVersion().should('be.visible');
-    
   }
 
   verifySuccessfulLogin() {

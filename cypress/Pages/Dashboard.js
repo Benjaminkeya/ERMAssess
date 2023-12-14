@@ -18,9 +18,11 @@ class Dashboard {
   clickUserMenu(){
     this.elements.userMenu().click({force:true})
   }
+  
   isUserProfileDropDownVisible() {
     this.elements.userMenu().should('be.visible')
   }
+
    addFeedback(Description, expectedResponse) {
     this.elements.feedbackBtn().should('be.visible').click({ force: true });
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
@@ -68,15 +70,14 @@ class Dashboard {
       expect(newTab,{ timeout: 20000 }).to.exist;
     });
   }
+
   searchHelpCenterArticle() {
     this.elements.helpBtn().should('be.visible').click({force:true});
     this.elements.verifyHelpCentrePage();
     this.elements.firstHelpArticleLink().should('exist').click({force:true});
-    
   }
   
 whatsNew(){
-  
   this.elements.whatsNewLink().click();
   cy.contains('Recently Released Features').first().click({force:true})
   cy.window().then((win) => {

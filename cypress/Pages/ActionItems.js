@@ -143,7 +143,6 @@ createAuditLevelActionItem(name,assignedTo,tag){
 validateActionItemOverDueStatus(){
   cy.get('.d-flex:nth-child(1) .btn-outline-secondary > .material-icons').scrollIntoView().click({force: true});
     this.elements.editActionItemBtn().click({force:true})
-    
     // Create a Date object to get today's date
     const today = new Date();
     // Add 5 days to the current date
@@ -159,7 +158,6 @@ validateActionItemOverDueStatus(){
     // });
     this.elements.updateActionItemBtn().click({force:true})
     cy.get('.bg-danger.bg-opacity-10.text-danger.badge.bg-primary').eq(1).should('contain','Overdue')
-
 }
 
 
@@ -167,6 +165,7 @@ viewAllActionItems(){
   cy.location('pathname').should('eq','/action-items')
   this.elements.actionItemTitle().should('contain.text', 'Action Items');
 }
+
 filterActionItems(assigner,assignee,name){
   this.clickActionItemDropDown();
   this.clickViewAllActionItems();
@@ -186,21 +185,19 @@ filterActionItems(assigner,assignee,name){
   cy.contains(modifiedDate+',')
   cy.contains(name)
 }
+
 resetfFilterActionItem(){
   this.clickResetFiltersBtn()
-
-
-
-
 }
+
 viewActionItemHistory(){
   this.elements.historyBtn().scrollIntoView().click({force:true})
   cy.contains('Action Item History')
   cy.contains('Current Status')
   cy.contains('Previous Status')
   cy.contains('Time Stamp')
-
 }
+
 addComment(desc){
   this.clickActionItemCommentsBtn()
   this.elements.commentField().type(desc,{delay:0})
@@ -226,6 +223,7 @@ deleteComment(){
   this.elements.delCommentBtn().click({force:true})
   cy.contains('No action item Comments')
 }
+
 uploadEvidenceFilesToActionItem(){
   this.elements.editActionItemsfromViewAllPageBtn().click({force:true})
   this.elements.editActionItemBtn().click({force:true})
@@ -237,6 +235,7 @@ uploadEvidenceFilesToActionItem(){
   cy.wait(2500)
   cy.contains(filename)
 }
+
 DeleteEvidenceFile(){
   this.elements.editActionItemsfromViewAllPageBtn().click({force:true})
   this.elements.editActionItemBtn().click({force:true})
@@ -259,11 +258,13 @@ deleteActionItem(notification){
   this.clickConfirmDel()
   cy.contains(notification)
 }
+
 deleteActionItemFromViewAllPage(notification){
   this.elements.delActionItemsfromViewAllPageBtn().click({force:true})
   this.clickConfirmDel()
     cy.contains(notification)
 }
+
 turnOnNotifications(message){
   this.elements.notificationsToggleBtn().should('not.be.checked').then((notChecked)=>{
   if( notChecked == true){
@@ -285,8 +286,8 @@ turnOffNotifications(){
   this.clickOnNotificationToggle();
   this.elements.successMSG().contains('Your notification preference has been updated')
   this.elements.notificationsToggleBtn().should('not.be.checked')
-
 }
+
 viewMyActionItems(assignedTo){
   this.elements.userMenu().click()
   cy.contains('My Action Items').cliick({force:true})
