@@ -1,0 +1,23 @@
+{
+  
+  "email": "benjamin.keya@pixeledge.io",
+  "password": "Benjamin@1",
+  "wrongEmail":"",
+  "wrongpassword":"",
+  "Name":"Cypress Test Name",
+  "Address":"Cypress Address",
+  "Description":"Test description",
+  "newName":"Cypress Updated Name",
+  "newDescription":"Test description",
+  "jurisName":"QA Jurisdiction",
+  "updateJurisName":"Test Jurisdiction",
+  "Assignee":"Benjamin Keya",
+  "emailName" : "cypresstest",
+  "TestOrg":"PixelEdge QA Automation",
+  "Protocol":"PixelEdge QA Automation",
+  "Phone":"105435866328569",
+  "AssessmentGroupName":"Cypress Assessment Group",
+  "TestGeo":"Test Geolocation Title"
+
+
+}
