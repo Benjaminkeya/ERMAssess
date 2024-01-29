@@ -1,5 +1,8 @@
+//Generate random Number
 var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
+
 class Portfolio {
+  //Page Element selectors
   elements = {
     firstPortfolioOnTheDashboard: () =>cy.xpath("//div[@class='nav nav-pills']/a[1]"),
     newPortfolioBtn: () => cy.get('.py-0'),
@@ -11,12 +14,13 @@ class Portfolio {
     firstEntity: () => cy.get('#facility-typeahead-item-0'),
     selectEntityField: () => cy.get('.rbt-input-wrapper .rbt-input-main'),
     saveBtn: () => cy.contains('button','Save'),
-    delPortfolioBtn1: () => cy.get(':nth-child(2) > .ms-3'),
+    delPortfolioBtn1: () => cy.contains('button','Delete'),
     delPortfolioBtn2: () => cy.get('.btn-danger'),
-    copyPortfolioName: () => cy.get('.modal-title >.text-muted'),
+    portfolioNameInnertext: () => cy.get('.modal-title > .text-muted'),
     confirmPortfolioName: () => cy.get('#productName'),
   };
 
+//Page Element Actions
   clickFirstPortfolioOnTheDashboard() {
     this.elements.firstPortfolioOnTheDashboard().click({force:true});
   }
@@ -38,7 +42,10 @@ class Portfolio {
     this.setPortfolioName(name + randomNum);
     this.setDescriptionField(desc);
     this.clickCreatePortfolioBtn({ force: true });
+    cy.contains(name +  randomNum)
   }
+
+//Class  Function Objects
 
   managePortfolio(name) {
     this.clickFirstPortfolioOnTheDashboard();
@@ -52,16 +59,18 @@ class Portfolio {
     this.clickFirstPortfolioOnTheDashboard();
     cy.contains(port)
     })
-    
   }
+  
   deletePortfolio() {
     this.clickFirstPortfolioOnTheDashboard();
-    this.elements.delPortfolioBtn1().should('be.enabled').click({force:true});
-    this.elements.copyPortfolioName().should('be.visible').then((portfolioName) => {
-      let portfolio = portfolioName.text();
-      this.elements.confirmPortfolioName().type(portfolio, { delay:0 });
-      this.elements.delPortfolioBtn2().should('be.enabled').click({force:true});
-    });
-  }
+    this.elements.delPortfolioBtn1().should('be.enabled').as('deleteBtn')
+    cy.get('@deleteBtn').click({force:true});
+    this.elements.portfolioNameInnertext().should('exist').should('be.visible').as('innerText')
+    cy.get('@innerText').then((portfolioName) => {
+                        let portfolio = portfolioName.text();
+                        this.elements.confirmPortfolioName().type(portfolio, { delay:0 });
+                        this.elements.delPortfolioBtn2().should('be.enabled').click({force:true});
+                   });
+     }
 }
 export default new Portfolio()

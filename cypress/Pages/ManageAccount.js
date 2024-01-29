@@ -1,5 +1,8 @@
+//Generate a random number 
 var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
+
 class ManageAccount {
+  //Page Element selectors
   elements = {
     manageUserLink:()=>cy.contains('a','Manage'),
     pageTitle:()=>cy.get('.my-2 > :nth-child(2)'),
@@ -9,7 +12,7 @@ class ManageAccount {
     addMemberBtn1:() => cy.contains('button','Add Member'),
     cancelAddMember:() => cy.get('.bg-secondary'),
     addMemberBtn2:() => cy.get('.float-end'),
-    submitBtn:()=>cy.get('.align-bottom > .float-end'),
+    submitBtn:()=>cy.contains('button','Submit'),
     userEmail:()=>cy.get('.table-group-divider > tr > :nth-child(3)'),
     delLastMember:() =>cy.xpath( "//tbody[@class='table-group-divider']/tr[1]/td/button/span[contains(text(),'delete_outline')]"),
     editLastMemberBtn:() =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/button/span[contains(text(),'tune')]"),
@@ -21,7 +24,7 @@ class ManageAccount {
     memberStatus:() =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td[5]/span"),
     resendToastMsg:()=>cy.get('p.mb-1'),
     updateToastMsg:()=>cy.get('.toast-body'),
-    entitiesTab:()=>cy.get('#controlled-tab-example-tabpane-facilities > .table > .table-group-divider > .border > :nth-child(2) > .float-end > .form-check-input'),
+    entitiesTab:()=>cy.xpath("//button[@id='controlled-tab-example-tab-facilities']"),
     allEntitiesToggleBtn:()=> cy.get('#controlled-tab-example-tabpane-facilities > .table > .table-group-divider > .border > :nth-child(2) > .float-end > .form-check-input'),
     portfolioTab:()=>cy.get('#controlled-tab-example-tab-portfolios'),
     AllPortfliosToggleBtn:()=> cy.get( '#controlled-tab-example-tabpane-portfolios > .table > .table-group-divider > .border > :nth-child(2) > .float-end > .form-check-input'),
@@ -39,6 +42,7 @@ class ManageAccount {
     
   };
 
+//Actions  on Page Eelements
   setFirstName(name) {
     this.elements.firstName().should('be.visible').type(name);
   }
@@ -50,65 +54,92 @@ class ManageAccount {
   setEmail(email) {
     this.elements.email().should('be.visible').type(email);
   }
+  
   clickManageLink() {
     this.elements.manageUserLink().should('be.visible').click({force:true}); 
   }
+
   validateManageUserPage() {
     this.elements.pageTitle().should('be.visible').should('contain', 'Account Management');
   }
+
   selectMemberRole(role) {
     const radioBtn = {
       Admin: 3,
       Certifier: 4,
       Member: 5,
     };
-
     cy.get(`:nth-child(${radioBtn[role]}) > #checkbox-member`).should('be.visible').click({force:true});
-
   }
 
   clickAddMemberBtn1() {
     this.elements.addMemberBtn1().should('be.visible').click({force:true});
   }
 
-  CancelAddMember() {
-    this.elements.cancelAddMember().should('be.visible').click({force:true});
-  }
-
   clickAddMemberBtn2() {
     this.elements.addMemberBtn2().should('be.visible').click({force:true});
   }
+
   clickSubmitBtn(){
     this.elements.submitBtn().click({force:true})
   }
-  // clickMemberByNumber(n) {
-  //   cy.get('.table-group-divider > :nth-child(' + n + ') > :nth-child(1)').should('be.visible').click({force:true});
-  // }
-
-  addUniqueMemberPositive(firstName,role) {
+//Class Function Objects
+  addMemberPositive(firstName,role,orgId) {
     this.clickAddMemberBtn1();
     this.setFirstName(firstName);
     this.setLastName(randomNum);
     this.setEmail(firstName + randomNum + '@pixeledge.io');
     this.selectMemberRole(role);
     const debaseUrl = Cypress.env('testEnvironments').deBaseUrl
-    cy.intercept('POST',debaseUrl + '/organizations/e7b20a69-5418-423a-ba4e-ace7312cb632/members').as('created')
+    cy.intercept('POST',debaseUrl + '/organizations/' + orgId + '/members').as('created') 
     this.clickAddMemberBtn2({force:true});
-    this.clickSubmitBtn()
     cy.wait('@created')
+    cy.intercept('PUT','**/*').as('submitted')
+    this.clickSubmitBtn()
+    cy.wait('@submitted')
     this.elements.userEmail().invoke('text').then((email)=>{
       expect(email).to.have.string(firstName + randomNum + '@pixeledge.io')
     }) 
-
 }
-  addUniqueMemberNegative(firstName,role) {
+
+//Negative Member Account tests
+addMemberWithout1stName(firstName,role) {
+  this.clickAddMemberBtn1();
+  this.setLastName(randomNum);
+  this.setEmail(firstName + randomNum + '@gmail.com');
+  this.selectMemberRole(role);
+  this.elements.addMemberBtn2().should('be.disabled')
+}
+  addMemberWithoutLastName(firstName,role) {
     this.clickAddMemberBtn1();
     this.setFirstName(firstName);
     this.setEmail(firstName + randomNum + '@gmail.com');
     this.selectMemberRole(role);
     this.elements.addMemberBtn2().should('be.disabled')
   }
+  
+  addMemberWithInvalidEmail(firstName,role) {
+    this.clickAddMemberBtn1();
+    this.setFirstName(firstName);
+    this.setLastName(randomNum);
+    this.setEmail(firstName + randomNum + 'gmail.com');
+    this.selectMemberRole(role);
+    cy.contains('email must be a valid email')
+    this.elements.addMemberBtn2().should('be.disabled')
+  }
 
+  addMemberWithBlankFields(role) {
+    this.clickAddMemberBtn1();
+    this.elements.firstName().click()
+    this.elements.lastName().click();
+    this.elements.email().click()
+    this.selectMemberRole(role);
+    cy.contains('First name is required')
+    cy.contains('Last name is required')
+    cy.contains('Member email is required')
+    this.elements.addMemberBtn2().should('be.disabled')
+  }
+  //Update  Member Account
   updateLastMemberWithAllEntityAccess(message) {
     this.elements.editLastMemberBtn().should('be.visible').scrollIntoView().click({force:true});
     this.elements.entitiesTab().should('be.visible').click();
@@ -172,6 +203,7 @@ class ManageAccount {
 
   addTag(name,desc){
     this.elements.addTagBtn().click({force:true})
+    var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
     this.elements.entityTagName().type(name + randomNum)
     this.elements.entityTagDescription().type(desc)
     this.elements.saveTagBtn().click(({force:true}))
@@ -191,13 +223,12 @@ class ManageAccount {
     .tagInnerText()
     .invoke('text')
     .then((getText) => {
-      this.elements.confirmTagField().should('be.visible').type(getText);
+      this.elements.confirmTagField().should('exist').as('confirmField')
+      cy.get('@confirmField').type(getText,{force:true});
       this.elements.delTagBtn2().should('be.enabled').click({ force: true });
       //verify Entity is deleted and does not exist
       cy.contains(getText).should('not.exist');
     });
-  
   }
-
 }
 export default new ManageAccount()

@@ -12,10 +12,10 @@
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
 
 class ActionItems {
-
+//Page element Selectors
   elements = {
     userMenu: () =>cy.get('#collasible-nav-dropdown'),
-    actionItemDropdown:()=>cy.get('.action-item > .dropdown-toggle'),
+    actionItemDropdown:()=>cy.get("a[class='px-2 mt-1 me-1 nav-link'] span"),
     newActionItemBtn:()=>cy.contains('button','New Action Item'),
     status:()=>cy.get('#status'),
     titleField:()=>cy.get('#item'),
@@ -23,16 +23,16 @@ class ActionItems {
     dateField:()=>cy.xpath("//input[@placeholder='Enter Due Date']"),
     updatedAtFilter:()=>cy.get(':nth-child(3) > .react-datepicker-wrapper > .react-datepicker__input-container > .form-control'),
     completionDateFilter:()=>cy.get(':nth-child(4) > .react-datepicker-wrapper > .react-datepicker__input-container > .form-control'),
-    assignedByFilter:()=>cy.get(':nth-child(5) > .rbt > div > .rbt-input-main'),
-    assignedToFilter:()=>cy.get(':nth-child(6) > .rbt > div > .rbt-input-main'),
-    filterByEntity:()=>cy.get(':nth-child(7) > .rbt > div > .rbt-input-main'),
-    filterByAssessment:()=>cy.get(':nth-child(8) > .rbt > div > .rbt-input-main'),
-    searchbyId:()=>cy.get(':nth-child(9) > .form-control'),
+    assignedByFilter:()=>cy.get(':nth-child(6) > .rbt > div > .rbt-input-main'),
+    assignedToFilter:()=>cy.get(':nth-child(7) > .rbt > div > .rbt-input-main'),
+    filterByEntity:()=>cy.get(':nth-child(8) > .rbt > div > .rbt-input-main'),
+    filterByAssessment:()=>cy.get(':nth-child(9) > .rbt > div > .rbt-input-main'),
+    searchbyId:()=>cy.get(':nth-child(10) > .form-control'),
     searchByTitle:()=>cy.get(':nth-child(10) > .form-control'),
     assignedToField:()=>cy.get(':nth-child(5) > .rbt > .rbt-input-multi'),
     tagsField:()=>cy.xpath("//input[@placeholder='Select or create a tag ...']"),
     createActionItemBtn:()=>cy.contains('button','Create Action Item'),
-    editActionItemBtn:()=>cy.get(':nth-child(1) >.text-end >.btn-outline-primary >.material-icons-outlined'),
+    editActionItemBtn:()=>cy.xpath("//span[@class='material-icons-outlined md-16'][normalize-space()='edit']"),
     updateActionItemBtn:()=>cy.xpath("//button[normalize-space()='Update']"),
     backCancelBtn:()=>cy.get('.sticky-bottom > .me-1'),
     deleActionItemBtn:()=>cy.get(':nth-child(1) > .text-end > .btn-outline-danger > .material-icons'),
@@ -40,13 +40,16 @@ class ActionItems {
     confirmDelActionItem:()=>cy.get('.btn-danger'),
     closeDelModalBtn:()=>cy.get('.btn-close'),
     actionItemTitle:()=>cy.get('h1'),
-    exportActionItemBtn:()=>cy.contains('button','Export Action Items'),
+    exportActionItemDropdown:()=>cy.contains('Export'),
+    exportActionItemExcel:()=>cy.get(':nth-child(4) > .me-2'),
+    exportActionItemWord:()=>cy.get(':nth-child(3) > .me-2'),
+    exportActionItemPDF:()=>cy.get(':nth-child(2)'),
     selectAssignee:()=> cy.get('#subscribers-typeahead-item-0 > .rbt-highlight-text'),
     selectTag:()=>cy.get('#tags-typeahead-item-0'),
     updateDatePicker:()=>cy.get('.action-item-datepicker'),
     historyBtn:()=>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/div/button/span[contains(text(),'history')]"),
     commentsBtn:()=>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/div/button/span[contains(text(),'comment')]"),
-    editActionItemsfromViewAllPageBtn:()=>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/div/button/span[contains(text(),'tune')]"),
+    editActionItemsfromViewAllPageBtn:()=>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/div/button/span[contains(text(),'edit')]"),
     delActionItemsfromViewAllPageBtn:()=>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/div/button/span[contains(text(),'delete_outline')]"),
     commentField:()=>cy.get('#comment'),
     postCommentBtn:()=>cy.get('form > .col-12 > .float-end'),
@@ -56,11 +59,13 @@ class ActionItems {
     statusFilter:()=>cy.get('#dropdown-done'),
     levelFilter:()=>cy.get('#dropdown-level'),
     chooseFileField:()=>cy.get('#file'),
-    updatedDateFilter:()=>cy.get(':nth-child(3) > .react-datepicker-wrapper > .react-datepicker__input-container > .form-control'),
-    assignedByFilter:()=>cy.get(':nth-child(5) > .rbt > div > .rbt-input-main'),
+    updatedDateFilter:()=>cy.get(':nth-child(4) >.react-datepicker-wrapper >.react-datepicker__input-container >.form-control'),
+    assignedByFilter:()=>cy.get(':nth-child(6) > .rbt > div > .rbt-input-main'),
     notificationsToggleBtn:()=>cy.get('#actionItemEmailSwitch'),
     successMSG:()=>cy.get('.d-flex > :nth-child(2) > .mb-3')
   };
+
+  //Page Element Actions
 
   clickActionItemDropDown() {
     this.elements.actionItemDropdown().click({force:true});
@@ -79,8 +84,8 @@ class ActionItems {
   clickCloseDelModal(){
     this.elements.closeDelModalBtn().click({force:true});
   }
-  clickExportActionItems(){
-    this.elements.exportActionItemBtn().click({force:true})
+  clickExportActionItemsDropDown(){
+    this.elements.exportActionItemDropdown().click({force:true})
   }
 
   clickActionItemCommentsBtn(){
@@ -90,22 +95,31 @@ class ActionItems {
     this.elements.notificationsToggleBtn().click({force:true})
     }
 
+//Class  Function Objects
+
+openActionItemsPage(){
+  // this.clickActionItemDropDown()
+  cy.contains('Action Items')
+  cy.url().should('contain','/action-items')
+}
 
 createActionItem(title,desc,assignedTo,tag){
   this.elements.newActionItemBtn().scrollIntoView().click({force:true});
   this.elements.titleField().type(title +randomNum,{delay:0});
   this.elements.descriptionField().type(desc + randomNum,{delay:0});
-  this.elements.dateField().clear().type(formattedDate);
+  this.elements.dateField().clear().type(formattedDate,{delay:0});
   this.elements.assignedToField().type(assignedTo,{delay:0});
   this.elements.selectAssignee().click({force:true});
   this.elements.tagsField().type(tag);
   this.elements.selectTag().click({force: true});
   this.elements.createActionItemBtn().click({force: true});
   cy.contains(title + randomNum);
-
 }
 
 createAuditLevelActionItem(name,assignedTo,tag){
+  cy.intercept('GET','**/*').as('loaded')  
+    //debaseUrl + '/audits/     https://de.ermassess.com/api/v1/audits/65701cd201bd8
+    cy.wait('@loaded')
   cy.get('.mb-5 > :nth-child(1) > div > .float-end').click({force:true});
   this.elements.titleField().clear().type(name +randomNum,{delay:0})
   this.elements.descriptionField().type(name + randomNum)
@@ -120,7 +134,7 @@ createAuditLevelActionItem(name,assignedTo,tag){
 }
   
   updateActionItem(title,desc){
-    this.elements.editActionItemBtn().scrollIntoView().click({force:true})
+    this.elements.editActionItemBtn().first().scrollIntoView().click({force:true})
     this.elements.status().should('have.value',0)
     this.elements.titleField().clear().type(title + randomNum,{delay:0})
     this.elements.descriptionField().clear().type(desc + randomNum,{delay:0})
@@ -133,42 +147,17 @@ createAuditLevelActionItem(name,assignedTo,tag){
     const day = today.getDate().toString().padStart(2, '0');
     const year = today.getFullYear();
     const formatedDate = `${month}/${day}/${year}`
-    this.elements.updateDatePicker().clear().type(formatedDate)
+    this.elements.updateDatePicker().clear().type(formatedDate,{delay:0})
     // cy.get(':nth-child(2) > .mt-2').attachFile('CypressAuditReport.pdf', {
     //   action: 'drag-drop',
     // });
     this.elements.updateActionItemBtn().click({force:true})
     cy.contains(title + randomNum)
 }
-validateActionItemOverDueStatus(){
-  cy.get('.d-flex:nth-child(1) .btn-outline-secondary > .material-icons').scrollIntoView().click({force: true});
-    this.elements.editActionItemBtn().click({force:true})
-    // Create a Date object to get today's date
-    const today = new Date();
-    // Add 5 days to the current date
-    today.setDate(today.getDate() - 2);
-    // Format the date as MM/DD/YYYY
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const year = today.getFullYear();
-    const formatedDate = `${month}/${day}/${year}`
-    this.elements.updateDatePicker().clear().type(formatedDate)
-    // cy.get(':nth-child(2) > .mt-2').attachFile('CypressAuditReport.pdf', {
-    //   action: 'drag-drop',
-    // });
-    this.elements.updateActionItemBtn().click({force:true})
-    cy.get('.bg-danger.bg-opacity-10.text-danger.badge.bg-primary').eq(1).should('contain','Overdue')
-}
 
-
-viewAllActionItems(){
-  cy.location('pathname').should('eq','/action-items')
-  this.elements.actionItemTitle().should('contain.text', 'Action Items');
-}
 
 filterActionItems(assigner,assignee,name){
-  this.clickActionItemDropDown();
-  this.clickViewAllActionItems();
+  //this.clickActionItemDropDown();
   this.elements.statusFilter().should('be.visible').click({force:true})
   cy.contains('Assigned').click()
   this.elements.levelFilter().should('be.visible').click({force:true})
@@ -226,73 +215,99 @@ deleteComment(){
 
 uploadEvidenceFilesToActionItem(){
   this.elements.editActionItemsfromViewAllPageBtn().click({force:true})
-  this.elements.editActionItemBtn().click({force:true})
+  //this.elements.editActionItemBtn().click({force:true})
   cy.contains('button','Upload').scrollIntoView().click()
   //rename uploaded file name
   const filename = 'fileName'+ randomNum + '.pdf'
   this.elements.chooseFileField().attachFile({filePath:'File.pdf',fileName:filename}, {action: 'drag-drop'})
   cy.xpath("//button[normalize-space()='Upload evidence file']").click({force:true})
-  cy.wait(2500)
+  cy.wait(2800)
   cy.contains(filename)
+  this.elements.updateActionItemBtn().click({force:true})
 }
 
 DeleteEvidenceFile(){
   this.elements.editActionItemsfromViewAllPageBtn().click({force:true})
-  this.elements.editActionItemBtn().click({force:true})
+  //this.elements.editActionItemBtn().click({force:true})
   cy.contains('Evidence files').scrollIntoView()
-  cy.get(':nth-child(9) > .flex-fill > .mt-1 > .text-trancate').invoke('text').then((filename)=>{
-    cy.get(':nth-child(9) > :nth-child(3) > .border > .material-icons').click({force:true})
-    cy.get('.modal-footer > .btn-primary').click({force:true})
+  cy.get('.text-trancate').invoke('text').then((filename)=>{
+    cy.get(':nth-child(10) > :nth-child(3) > .border > .material-icons').first().click({force:true})
+    cy.contains('button','Delete').click({force:true})
     cy.wait(200)
     cy.contains(filename).should('not.exist')
   })
-}
-
-exportActionItems(){
-   this.clickExportActionItems()
-   cy.verifyDownload('Cypress Test Org - Action Items.xlsx')
-}
-
-deleteActionItem(notification){
-  this.clickDeleteActionItemBtn()
-  this.clickConfirmDel()
-  cy.contains(notification)
-}
-
-deleteActionItemFromViewAllPage(notification){
-  this.elements.delActionItemsfromViewAllPageBtn().click({force:true})
-  this.clickConfirmDel()
-    cy.contains(notification)
-}
-
-turnOnNotifications(message){
-  this.elements.notificationsToggleBtn().should('not.be.checked').then((notChecked)=>{
-  if( notChecked == true){
-    this.clickOnNotificationToggle();
-    this.elements.successMSG().contains(message)
-    this.elements.notificationsToggleBtn().should('be.checked')
-  }else
-  {
-    this.clickOnNotificationToggle();
-    this.elements.notificationsToggleBtn().should('not.be.checked')
-    this.clickOnNotificationToggle();
-    this.elements.successMSG().contains(message)
-    this.elements.notificationsToggleBtn().should('be.checked')
   }
-  })
-  
-}
-turnOffNotifications(){
-  this.clickOnNotificationToggle();
-  this.elements.successMSG().contains('Your notification preference has been updated')
-  this.elements.notificationsToggleBtn().should('not.be.checked')
-}
 
-viewMyActionItems(assignedTo){
-  this.elements.userMenu().click()
-  cy.contains('My Action Items').cliick({force:true})
-  this.elements.assignedToFilter().should('have.value',assignedTo)
- }
+  exportActionItemsExcel(OrgName){
+    this.clickExportActionItemsDropDown()
+    this.elements.exportActionItemDropdown().click()
+    cy.wait(2000)
+    cy.intercept('GET','**/*').as('export')
+    this.elements.exportActionItemExcel().click({force:true})
+    cy.wait('@export')
+    cy.verifyDownload(OrgName + ' - Action Items.xlsx') 
+  }
+
+  exportActionItemsPDF(){
+    this.clickExportActionItemsDropDown()
+    this.elements.exportActionItemPDF().click({force:true})
+    cy.verifyDownload('PixelEdge Test Automation - Action Items.pdf')
+  }
+
+  exportActionItemsWord(){
+    this.clickExportActionItemsDropDown()
+    this.elements.exportActionItemWord().click({force:true})
+    cy.verifyDownload('PixelEdge Test Automation - Action Items.docx')
+  }
+
+  deleteActionItem(notification){
+    this.clickDeleteActionItemBtn()
+    this.clickConfirmDel()
+    cy.contains(notification)
+  }
+
+  deleteActionItemFromViewAllPage(notification){
+    this.elements.delActionItemsfromViewAllPageBtn().click({force:true})
+    this.clickConfirmDel()
+      cy.contains(notification)
+  }
+
+  validateActionItemOverDueStatus(){
+    this.elements.editActionItemsfromViewAllPageBtn().click({force:true})
+    // Create a Date object to get today's date
+    const today = new Date();
+    // Add 5 days to the current date
+    today.setDate(today.getDate() - 2);
+    // Format the date as MM/DD/YYYY
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const year = today.getFullYear();
+    const formatedDate = `${month}/${day}/${year}`
+    cy.get('.action-item-datepicker').clear().type(formatedDate)
+    this.elements.updateActionItemBtn().click({force:true})
+    cy.get('.bg-danger').should('contain','Overdue')
+
+  }
+
+  turnOffNotifications(message){
+    this.clickOnNotificationToggle();
+    this.elements.successMSG().contains(message)
+    cy.wait(1000)
+    this.elements.notificationsToggleBtn().should('not.be.checked')
+  }
+
+  turnOnNotifications(message){
+    
+      this.clickOnNotificationToggle();
+      this.elements.successMSG().contains(message)
+      this.elements.notificationsToggleBtn().should('be.checked') 
+  }
+
+  viewMyActionItems(assignedTo){
+    this.elements.userMenu().click({force:true})
+    cy.contains('My Action Items').click({force:true})
+    this.elements.assignedToFilter().should('have.value',assignedTo)
+  }
 } 
 export default new ActionItems()
 

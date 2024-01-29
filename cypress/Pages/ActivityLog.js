@@ -1,4 +1,5 @@
 class ActivityLog{
+   // Page Element selectors
     elements = {
         userMenu: () => cy.get('#collasible-nav-dropdown'),
         activityLogLink:()=>cy.contains('Activity Log'),
@@ -13,6 +14,7 @@ class ActivityLog{
         viewAssessmentBtn:()=>cy.get('.modal-footer > .px-3')
     }
     
+    //Actions on the page elements
     clickUserMenu(){
        this.elements.userMenu().click();
     }
@@ -35,8 +37,9 @@ class ActivityLog{
     filterActivityLog(){
         
     }
-    reviewActivityLog(){
-        
+
+    //Class Function Objects
+    reviewActivityLogPage(){
         this.clickReviewBtn()
         cy.contains('Review Observation')
     }
