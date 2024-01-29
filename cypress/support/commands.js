@@ -2,21 +2,7 @@ import 'cypress-iframe';
 import 'cypress-file-upload';
 import LoginPage from '../Pages/LoginPage';
 // ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
+
 // -- This is a dual command --
 // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
 //
@@ -24,7 +10,7 @@ import LoginPage from '../Pages/LoginPage';
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 ///<reference types="cypress"/>
 ///<reference types="cypress-xpath"/>
-/// <reference types="@shelex/cypress-allure-plugin" />
+//// <reference types="@shelex/cypress-allure-plugin" />
 
 //Import verify downloaded files
 require ('cy-verify-downloads').addCustomCommand()
@@ -44,7 +30,18 @@ Cypress.Commands.add("login", (email, password) => {
 });
 //Custom command to click on a table link
 Cypress.Commands.add('clickTableLink', (rowIndex, columnIndex) => {
-  cy.xpath(`//tbody[@class='table-group-divider']//tr[${rowIndex}]/td[${columnIndex}]/p/a`).should('exist').scrollIntoView().click({force:true})
+  cy.xpath(`//tbody[@class='table-group-divider']//tr[${rowIndex}]/td[${columnIndex}]/p/a`).as('tableLink');
+  cy.get('@tableLink')
+                      .should('exist')
+                      .scrollIntoView().click({force:true})
 });
 
-
+Cypress.Commands.add('createUser', (username, email, password) => {
+  // Your logic to create a user, for example:
+  // Assume you have a registration page with form fields: username, email, password
+  cy.visit('/register');
+  cy.get('#username').type(username);
+  cy.get('#email').type(email);
+  cy.get('#password').type(password);
+  cy.get('button[type="submit"]').click();
+});
