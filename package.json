@@ -4,26 +4,40 @@
     "pnpm": "^8.10.0"
   },
   "devDependencies": {
-    "@shelex/cypress-allure-plugin": "^2.40.0",
     "cy-verify-downloads": "^0.2.1",
-    "cypress": "^13.6.1",
+    "cypress": "^13.6.3",
     "cypress-audit": "^1.0.0",
     "cypress-browser-permissions": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-iframe": "^1.0.1",
-    "cypress-mochawesome-reporter": "^3.6.1",
-    "cypress-testrail": "^2.8.2",
+    "cypress-mochawesome-reporter": "^3.8.0",
+    "cypress-testrail": "^2.9.0",
     "cypress-xpath": "^2.0.1",
     "fs": "^0.0.1-security"
   },
   "scripts": {
-    "test": "npx cypress run",
-    "cy:run": "npx cypress run --browser chrome --env allure=true",
-    "clean:reports": "rm -R -f allure-report/* && rm -R -f allure-results/*",
-    "before:test": "npm run clean:reports",
-    "tests": "npm run cy:run || npm run after:test",
-    "after:test": "npm run allure:report",
-    "allure:report": "allure generate allure-results --clean -o allure-report && allure open allure-report",
-    "allure:generate": "allure generate allure-results"
-  }
+    "tests": "cypress run",
+    "runtests": "npm run tests --",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:firefox": "cypress run --browser firefox",
+    "cy:run:edge": "cypress run --browser firefox",
+    "allBrowsers": "npm run chrome || npm run edge || npm run firefox"
+  },
+  "name": "assessqaautomation",
+  "description": "Install cypress:",
+  "version": "1.0.0",
+  "main": "cypress.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunergix/ermassess_qa_automation.git"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "Benjamin Keya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sunergix/ermassess_qa_automation/issues"
+  },
+  "homepage": "https://github.com/sunergix/ermassess_qa_automation#readme"
 }
