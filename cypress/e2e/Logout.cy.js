@@ -1,13 +1,13 @@
 import PreActions from '../Pages/PreActions';
 import Logout from '../Pages/Logout';
 
-describe('Logout',()=>{
+describe('Logout  Test Suite',()=>{
 
   beforeEach(()=>{
     PreActions.preActions();
   })
 
-it('C1005: Logout',{ retries: 3 }, () => {
+it('C1005: Logout',() => {
   Logout.logoutUser();
 });
 })
