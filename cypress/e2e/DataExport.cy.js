@@ -1,6 +1,5 @@
 import DataExport from '../Pages/DataExport';
 import PreActions from '../Pages/PreActions';
-import Entities from '../Pages/Entities';
 const account = require('../fixtures/erm.json')
 
 describe('Organization Level Data Export test suite',() => {
@@ -9,29 +8,30 @@ describe('Organization Level Data Export test suite',() => {
   });
 
   it('C966: Export to Excel CSV',() => {
-    DataExport.dataExport(account.TestOrg);
-  });
-  
+    DataExport.dataExport(account.Protocol,account.TestOrg,'Your Files have been downloaded successfully')
+   })
+
   it('C1013: Generate Data Link',() => {
-    DataExport.generateDataLink(account.OrganizationID);
+    DataExport.generateDataLink(account.Protocol,account.OrganizationID);
   });
 
 });
 describe('Entity Level  Data Export test suite',() => {
-  after(()=>{
-    PreActions.preActions();
-    Entities.deleteEntityPositive()
-  })
+  
   beforeEach(() => {
     PreActions.preActions();
   });
 
-  it(': Export to Excel CSV',() => {
-    DataExport.entityDataExport(account.TestOrg);
+  it('C2012: Export to Excel CSV',() => {
+    DataExport.entityDataExport(account.Protocol,account.TestOrg,'Your Files have been downloaded successfully');
   });
   
-  it(': Generate Data Link',() => {
-    DataExport.generateEntityDataLink(account.OrganizationID);
+  it('C2016: Generate Data Link',() => {
+    DataExport.generateEntityDataLink(account.Protocol,account.OrganizationID);
   });
-
+  // after(()=>{
+  //   PreActions.preActions();
+  //   cy.clickTableLink(1,1);
+  //   Assessments.deleteAssessment(account.Name)
+  // })
 });
