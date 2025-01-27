@@ -1,0 +1,52 @@
+{
+  
+  "OwnerRole":{
+    "email": "benjamin.keya@pixeledge.io",
+    "password": "Benjamin@1",
+    "wrongEmail":"benjaminn@pixeledge.io",
+    "wrongpassword":"Benjamin@11ß"
+  },
+  "AdminRole":{
+    "email":"benjamin.keya+122@pixeledge.io",
+    "password":"Benjamin@1"
+  },
+  "MemberRole":{
+    "email":"benjamin.keya+125@pixeledge.io",
+    "password":"Benjamin@1"
+  },
+  "CertifierRole":{
+    "email":"benjamin.keya+123@pixeledge.io",
+    "password":"Benjamin@1"
+  },
+  "ContributorRole":{
+    "email":"benjamin.keya+124@pixeledge.io",
+    "password":"Benjamin@1"
+  },
+  "Name":"CypressTestName+QA-",
+  "Address":"Cypress Test Address",
+  "Description":"Cypress Test description",
+  "newName":"Cypress Test Updated Name",
+  "newDescription":"Test description",
+  "Assignee":"Benjamin Keya",
+  "ActionTag": "test",
+  "emailName" : "cypresstest",
+  "filename":"cypress-test-name",
+  "TestOrg":"1PixelEdge Test Automation", 
+  "protocolID":"6571d0ff10da2",
+  "OrganizationID":"65d861840bfa3",
+  "Protocol":"PixelEdge Test Automation",
+  "Phone":"23232323",
+  "profileID":"62d91715cc6af",
+  "AssessmentGroupName":"Cypress Assessment Group",
+  "TestGeo":"Test Geolocation Title",
+  "addSummary": "Add Executive Summary",
+  "ReportTitle": "Automation Report",
+  "ReportEditedTitle": "Edited Report",
+  "ReportDesc": "Automation Report Description",
+  "ReportiFrameCode": "<iframe title=\"Report UF Updated SK\" width=\"1140\" height=\"541.25\" src=\"https://app.powerbi.com/reportEmbed?reportId=e2c96a73-f9af-4f9e-9943-fcd8f272bdcb&autoAuth=true&ctid=bc09a27f-61eb-4e84-bce8-7ca822e991ba\" frameborder=\"0\" allowFullScreen=\"true\"></iframe>",
+  "ReportID": "033d944e-4bff-4d09-b876-27b835b118d6",
+  "addComment": "Add Comment from Automation",
+  "editResponse": "Edit Text Response from Automation",
+  "NotepadTitle": "Assess Note"
+ 
+}
