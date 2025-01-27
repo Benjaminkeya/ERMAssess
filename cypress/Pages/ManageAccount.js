@@ -1,6 +1,6 @@
 //Generate a random number 
 var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
-
+//let tagName;
 class ManageAccount {
   //Page Element selectors
   elements = {
@@ -11,34 +11,43 @@ class ManageAccount {
     email:() => cy.get('#email'),
     addMemberBtn1:() => cy.contains('button','Add Member'),
     cancelAddMember:() => cy.get('.bg-secondary'),
-    addMemberBtn2:() => cy.get('.float-end'),
+    addMemberBtn2:() => cy.get('.d-flex > .btn-primary'),
     submitBtn:()=>cy.contains('button','Submit'),
     userEmail:()=>cy.get('.table-group-divider > tr > :nth-child(3)'),
-    delLastMember:() =>cy.xpath( "//tbody[@class='table-group-divider']/tr[1]/td/button/span[contains(text(),'delete_outline')]"),
-    editLastMemberBtn:() =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/button/span[contains(text(),'tune')]"),
-    resendLastAddedMemberRequest: () =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/button/span[contains(text(),'refresh')]"),
-    copyEmail:() => cy.get('.modal-title > .text-muted'),
-    confirmEmail:() => cy.get('#productName'),
-    delMemberBtn:() =>cy.xpath("//div[@class='modal-footer']/button[@type='submit']"),
+    delLastMember:() =>cy.xpath( "//tbody[@class='table-group-divider']/tr[1]/td/span/button/span[contains(text(),'delete')]"),
+    editLastMemberBtn:() =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/span/button/span[contains(text(),'edit')]"),
+    resendLastAddedMemberRequest: () =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td/span/button/span[contains(text(),'refresh')]"),
+    confirmDelMemberBtn:() => cy.get("input[type='checkbox']"),
+    delMemberBtn:() =>cy.get("button[class='btn btn-danger btn-sm']"),
     updateMemberBtn:() => cy.get('.align-bottom > .float-end'),
-    memberStatus:() =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td[5]/span"),
+    memberStatus:() =>cy.xpath("//tbody[@class='table-group-divider']/tr[1]/td[6]/span"),
     resendToastMsg:()=>cy.get('p.mb-1'),
     updateToastMsg:()=>cy.get('.toast-body'),
     entitiesTab:()=>cy.xpath("//button[@id='controlled-tab-example-tab-facilities']"),
     allEntitiesToggleBtn:()=> cy.get('#controlled-tab-example-tabpane-facilities > .table > .table-group-divider > .border > :nth-child(2) > .float-end > .form-check-input'),
     portfolioTab:()=>cy.get('#controlled-tab-example-tab-portfolios'),
-    AllPortfliosToggleBtn:()=> cy.get( '#controlled-tab-example-tabpane-portfolios > .table > .table-group-divider > .border > :nth-child(2) > .float-end > .form-check-input'),
+    AllPortfliosToggleBtn:()=> cy.get('#controlled-tab-example-tabpane-portfolios > .table > .table-group-divider > .border > :nth-child(2) > .float-end > .form-check-input'),
     searchMember:()=>cy.get('.form-control'),
-    entityTagsTab:()=>cy.get(':nth-child(2) > .nav-link'),
-    addTagBtn:()=>cy.contains('button','Add Tag'),
+    exportMemberBtn:()=>cy.contains('button','Export Members'),
+    entityTagsTab:()=>cy.contains('a','Entity tags'),
+    assessmentTagsTab:()=>cy.get('.mb-3 > :nth-child(4) > .nav-link'),
+    addTagBtn:()=>cy.contains('button','Tag'),
     entityTagName:()=>cy.get('#name'),
     entityTagDescription:()=>cy.get('#description'),
     saveTagBtn:()=>cy.get('.float-end'),
-    editTagBtn:()=>cy.xpath("(//span[normalize-space()='tune'])[1]"),
-    delTagBtn1:()=>cy.xpath("(//span[@class='material-icons md-16'][normalize-space()='delete_outline'])[1]"),
-    tagInnerText:()=>cy.get('.modal-title > .text-muted'),
-    confirmTagField:()=>cy.get('#productName'),
-    delTagBtn2:()=>cy.contains('button','Delete')
+    editTagBtn:()=>cy.get(':nth-child(1) > :nth-child(5) > .btn-outline-primary'),
+    delTagBtn1:()=>cy.get(':nth-child(1) > :nth-child(5) > .ms-2'),
+    confirmDelEntityBtn:()=>cy.get('.form-check-input'),
+    delTagBtn2:()=>cy.contains('button','Delete'),
+    actionItemTagsTab:()=>cy.get(':nth-child(3) > .nav-link'),
+    addActionItemTagBtn:()=>cy.contains('button','Tag'),
+    actionItemTagName:()=>cy.get('#name'),
+    actionItemTagDescription:()=>cy.get('#description'),
+    saveActionItemTagBtn:()=>cy.get('.float-end'),
+    editActionItemTagBtn:()=>cy.get(':nth-child(1) > :nth-child(5) > .btn-outline-primary'),
+    delActionItemTagBtn1:()=>cy.get('tbody tr:nth-child(1) td:nth-child(5) button:nth-child(2)'),
+    confirmDelActionItemTagBtn:()=>cy.get('.form-check-input'),
+    delActionItemTagBtn2:()=>cy.get('.btn-danger')
     
   };
 
@@ -83,15 +92,29 @@ class ManageAccount {
   clickSubmitBtn(){
     this.elements.submitBtn().click({force:true})
   }
+
+  openActionItemTagsTab(){
+    this.elements.actionItemTagsTab().click({force:true})
+    cy.contains('h4','Action Item tags')
+    }
+    
+  openEntityTagsTab(){
+    this.elements.entityTagsTab().click({force:true})
+    cy.contains('h4','Entity tags')
+    }
+
+  OpenAssessmentTagsTab(){
+    this.elements.assessmentTagsTab().click({force:true})
+  }
 //Class Function Objects
-  addMemberPositive(firstName,role,orgId) {
+  addMemberPositive(firstName,role) {
     this.clickAddMemberBtn1();
     this.setFirstName(firstName);
     this.setLastName(randomNum);
     this.setEmail(firstName + randomNum + '@pixeledge.io');
     this.selectMemberRole(role);
     const debaseUrl = Cypress.env('testEnvironments').deBaseUrl
-    cy.intercept('POST',debaseUrl + '/organizations/' + orgId + '/members').as('created') 
+    cy.intercept('POST','**/*').as('created') 
     this.clickAddMemberBtn2({force:true});
     cy.wait('@created')
     cy.intercept('PUT','**/*').as('submitted')
@@ -106,14 +129,14 @@ class ManageAccount {
 addMemberWithout1stName(firstName,role) {
   this.clickAddMemberBtn1();
   this.setLastName(randomNum);
-  this.setEmail(firstName + randomNum + '@gmail.com');
+  this.setEmail(firstName + '+' + randomNum + '@pixeledge.io');
   this.selectMemberRole(role);
   this.elements.addMemberBtn2().should('be.disabled')
 }
   addMemberWithoutLastName(firstName,role) {
     this.clickAddMemberBtn1();
     this.setFirstName(firstName);
-    this.setEmail(firstName + randomNum + '@gmail.com');
+    this.setEmail(firstName +'+'+ randomNum + '@pixeledge.io');
     this.selectMemberRole(role);
     this.elements.addMemberBtn2().should('be.disabled')
   }
@@ -122,7 +145,7 @@ addMemberWithout1stName(firstName,role) {
     this.clickAddMemberBtn1();
     this.setFirstName(firstName);
     this.setLastName(randomNum);
-    this.setEmail(firstName + randomNum + 'gmail.com');
+    this.setEmail(firstName + randomNum + '+'+ randomNum + '@pixeledge.io');
     this.selectMemberRole(role);
     cy.contains('email must be a valid email')
     this.elements.addMemberBtn2().should('be.disabled')
@@ -146,11 +169,10 @@ addMemberWithout1stName(firstName,role) {
     this.elements.allEntitiesToggleBtn().should('be.visible').click({force:true});
     this.elements
       .updateMemberBtn()
-      .should('be.visible')
       .scrollIntoView()
       .should('be.visible')
       .click({force:true});
-    this.elements.updateToastMsg().should('contain', message);
+    this.elements.updateToastMsg().scrollIntoView().should('contain', message);
   }
 
   updateLastMemberWithAllPortfolioAccess(message) {
@@ -164,7 +186,7 @@ addMemberWithout1stName(firstName,role) {
       .scrollIntoView()
       .should('be.visible')
       .click();
-    this.elements.updateToastMsg().should('contain', message);
+    this.elements.updateToastMsg().scrollIntoView().should('contain', message);
   }
 
   resendJoinRequestToLastMember(message) {
@@ -179,16 +201,13 @@ addMemberWithout1stName(firstName,role) {
   searchMember(MemberName){
     this.elements.searchMember().type(MemberName + randomNum + '@pixeledge.io','{enter}')
     cy.wait(2000)
-    cy.contains(MemberName + randomNum + '@pixeledge.io')
+    cy.contains(MemberName + randomNum+ '@pixeledge.io')
   }
 
   deleteLastMemberPositive() {
     this.elements.delLastMember().should('be.visible').scrollIntoView().click({ force: true });
-    this.elements.copyEmail().then((email) => {
-    let memberEmail = email.text();
-    this.elements.confirmEmail().type(memberEmail);
+    this.elements.confirmDelMemberBtn().check()
     this.elements.delMemberBtn().click({force:true});
-    });
   }
 
   deleteLastMemberNegative() {
@@ -196,39 +215,78 @@ addMemberWithout1stName(firstName,role) {
     this.elements.delMemberBtn().should('be.disabled')
   }
 
-  openEntityTagsTab(){
-  this.elements.entityTagsTab().click({force:true})
-  cy.contains('h4','Entity tags')
+  exportMembers(OrgName){
+    cy.intercept('GET','**/*').as('exportMembers')
+    this.elements.exportMemberBtn().click()
+    cy.wait('@exportMembers')
+    cy.verifyDownload(OrgName + ' - Members.csv') 
+
   }
 
-  addTag(name,desc){
+  addEntityTag(name,desc){
     this.elements.addTagBtn().click({force:true})
     var randomNum = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
-    this.elements.entityTagName().type(name + randomNum)
+    this.elements.entityTagName().type(name + randomNum,{delay:0})
     this.elements.entityTagDescription().type(desc)
     this.elements.saveTagBtn().click(({force:true}))
     cy.contains(name+ randomNum)
   }
   
-  updateTag(name){
+  updateEntityTag(name){
+   // tagName = name
     this.elements.editTagBtn().click({force:true})
-    this.elements.entityTagName().clear().type(name+ randomNum)
+    this.elements.entityTagName().clear().type(name+ randomNum,{delay:0})
     this.elements.saveTagBtn().click(({force:true}))
     cy.contains(name+ randomNum)
   }
 
-  deleteTag(){
+  deleteEntityTag(){
     this.elements.delTagBtn1().click({force:true})
-    this.elements
-    .tagInnerText()
-    .invoke('text')
-    .then((getText) => {
-      this.elements.confirmTagField().should('exist').as('confirmField')
-      cy.get('@confirmField').type(getText,{force:true});
-      this.elements.delTagBtn2().should('be.enabled').click({ force: true });
-      //verify Entity is deleted and does not exist
-      cy.contains(getText).should('not.exist');
-    });
+    this.elements.confirmDelEntityBtn().should('exist').check()
+    cy.intercept('DELETE','**/*').as('deleteTag')
+    this.elements.delTagBtn2().should('be.enabled').click({ force: true });
+    cy.wait('@deleteTag')
   }
+  
+    addActionItemTag(name,desc){
+      this.elements.addActionItemTagBtn().click({force:true})
+      this.elements.actionItemTagName().type(name + randomNum)
+      this.elements.actionItemTagDescription().type(desc)
+      this.elements.saveActionItemTagBtn().click(({force:true}))
+      cy.contains(name+ randomNum)
+    }
+    
+    updateActionItemTag(name){
+      this.elements.editActionItemTagBtn().click({force:true})
+      this.elements.actionItemTagName().clear().type(name+ randomNum)
+      this.elements.saveActionItemTagBtn().click(({force:true}))
+      cy.contains(name+ randomNum)
+    }
+  
+    deleteActionItemTag(){
+      this.elements.delActionItemTagBtn1().click({force:true})
+      this.elements.confirmDelActionItemTagBtn().should('exist').check()
+      this.elements.delActionItemTagBtn2().click({ force: true });
+    } 
+
+    addAssessmentTag(name,desc){
+     this.elements.addTagBtn().click({force:true});
+     this.elements.actionItemTagName().type(name + randomNum)
+     this.elements.actionItemTagDescription().type(desc)
+     this.elements.saveActionItemTagBtn().click(({force:true}))
+     cy.contains(name+ randomNum)
+    }
+
+    updateAssessmentTag(name){
+      this.elements.editActionItemTagBtn().click({force:true})
+      this.elements.actionItemTagName().clear().type(name+ randomNum)
+      this.elements.saveActionItemTagBtn().click(({force:true}))
+    }
+    // deleteActionItemTag(){
+    //   this.elements.delActionItemTagBtn1().click({force:true})
+    //   this.elements.confirmDelActionItemTagBtn().should('exist').check()
+    //   this.elements.delActionItemTagBtn2().should('be.enabled').click({ force: true });
+      
+    // } 
 }
 export default new ManageAccount()

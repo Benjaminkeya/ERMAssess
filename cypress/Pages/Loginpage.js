@@ -4,30 +4,23 @@ class LoginPage {
     txtPass: () => cy.get('#password'),
     loginBtn: () => cy.get("button[type='submit']"),
     dashboard: () => cy.get('.breadcrumb-item > span'),
-    passEye: () => cy.get('.border > .material-icons'),
+    passEye: () =>cy.get('.material-symbols-outlined'),
     LoginPageLogo: () => cy.get('img'),
     DashboardLogo:()=>cy.xpath("//img[@class='visible']"),
     DashboardTxt:()=>cy.get('small > :nth-child(2)'),
     copyrightText:()=>cy.get('.my-3 > .mb-1 > small'),
     appVersion:()=>cy.get('.my-3 > .text-muted > small'),
     forgotPassBtn: () => cy.contains('a','Forgot Password?'),
+    cancelPassResetBtn:()=>cy.contains('a','Cancel'),
     txtEmail: () => cy.get('#email'),
     sendBtn: () => cy.contains('Send Instructions'),
   };
 //Page Actions
   navigate() {
     const url = Cypress.env('testEnvironments').baseUrl;
+    cy.intercept('GET','*/**').as('getAllRequests')
     cy.visit(url, { failOnStatusCode: false });
-    cy.intercept('GET','*/**').as('urlLoaded')
-    cy.wait('@urlLoaded')
-  }
-
-  setEmail(email) {
-    this.elements.txtEmail().clear().type(email, {delay:0},{ log: false });
-  }
-
-  setPassword(password) {
-    this.elements.txtPass().clear().type(password,{delay:0},{ log: false });
+    cy.wait('@getAllRequests')
   }
 
   viewPassword(password) {
@@ -40,12 +33,11 @@ class LoginPage {
     this.elements.loginBtn().should('be.visible').click({force: true });
   }
 
-
   //Function Objects
   login(email,password){ 
-    this.setEmail(email);
-    this.setPassword(password);
-    this.clickLogin();
+    this.elements.txtEmail().clear().type(email, {delay:0},{ log: false });
+    this.elements.txtPass().clear().type(password,{delay:0},{ log: false });
+    this.clickLogin({force:true});
   }
 
   verifyLoginPage(){
@@ -66,11 +58,16 @@ class LoginPage {
 
   resetPass(email, message) {
     this.elements.forgotPassBtn().scrollIntoView().should('exist').click({force:true});
-    const Url = Cypress.env('testEnvironments').baseUrl
-    cy.url().should('contain', Url + '/forgot-password');
+    cy.url().should('contain', Cypress.env('testEnvironments').baseUrl + '/forgot-password');
     this.elements.txtEmail().should('be.visible').clear().type(email,{delay:0});
     this.elements.sendBtn().should('be.visible').click({force:true});
     cy.contains(message);
+  }
+  cancelPasswordReset(){
+    this.elements.forgotPassBtn().scrollIntoView().should('exist').click({force:true});
+    cy.url().should('contain', Cypress.env('testEnvironments').baseUrl + '/forgot-password');
+    this.elements.cancelPassResetBtn().click()
+    cy.url().should('eq', Cypress.env('testEnvironments').baseUrl+'/login');
   }
     
 }

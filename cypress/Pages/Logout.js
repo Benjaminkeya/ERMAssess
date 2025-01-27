@@ -1,7 +1,7 @@
 class Logout {
   elements = {
     userMenu: () => cy.get('#collasible-nav-dropdown'),
-    logoutBtn: () => cy.get("[href='/logout']"),
+    logoutBtn: () => cy.get("[href='/logout']")
   };
 
   logoutUser() {

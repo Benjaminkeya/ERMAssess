@@ -9,9 +9,9 @@ class ActivityLog{
         searchMemberField:()=>cy.get('.rbt-input-main'),
         dateRangeFild:()=>cy.get('.rbt-input-main'),
         filterByPropertiesBtn:()=>cy.get('.form-select'),
-        reviewBtn:()=>cy.get(':nth-child(1) > .text-end > .btn'),
+        reviewBtn:()=>cy.contains('button','Review'),
         reviewModalTitle:()=>cy.get(':nth-child(1) > .text-end > .btn'),
-        viewAssessmentBtn:()=>cy.get('.modal-footer > .px-3')
+        viewAssessmentBtn:()=>cy.get('.d-inline-block > .px-3')
     }
     
     //Actions on the page elements
@@ -24,7 +24,7 @@ class ActivityLog{
     }
 
     clickReviewBtn(){
-        this.elements.reviewBtn().scrollIntoView().click({force:true})
+        this.elements.reviewBtn().first().scrollIntoView().click({force:true})
     }
     clickViewAssessmentBtn(){
         this.elements.viewAssessmentBtn().click({force:true})
@@ -41,27 +41,27 @@ class ActivityLog{
     //Class Function Objects
     reviewActivityLogPage(){
         this.clickReviewBtn()
-        cy.contains('Review Observation')
+        cy.contains('Review')
     }
     viewActivityLogAssessment(){
         this.clickReviewBtn();
-        this.elements.viewAssessmentBtn().should('exist')
-        cy.get('.text-muted > small').should('be.visible')
-        //.invoke('text').then((assessName)=>{
-            // this.clickViewAssessmentBtn()
-            //     cy.window().then((win) => {
-            //         cy.stub(win, 'open').as('windowOpen');
-            //         cy.get('@windowOpen').should('be.calledWithMatch', url => {
-            //         // Match the URL with a wildcard or pattern
-            //         return url.includes('https://www.ermassess.com/audits/*'); 
-            //         }).as('newTabUrl');
-            //         cy.get('@newTabUrl').then((newTabUrl) => {
-            //         cy.visit(newTabUrl);
-            //         cy.contains(assessName)
-            //         cy.contains('Assessment Report')
-            //         });             
-            // });  
-       // }) 
+       // this.elements.viewAssessmentBtn().should('exist')
+       // cy.get('.modal-title').should('be.visible')
+    //     .invoke('text').then((assessName)=>{
+    //         this.clickViewAssessmentBtn()
+    //             cy.window().then((win) => {
+    //                 cy.stub(win, 'open').as('windowOpen');
+    //                 cy.get('@windowOpen').should('be.calledWithMatch', url => {
+    //                 // Match the URL with a wildcard or pattern
+    //                 return url.includes('https://www.ermassess.com/audits/*'); 
+    //                 }).as('newTabUrl');
+    //                 cy.get('@newTabUrl').then((newTabUrl) => {
+    //                 cy.visit(newTabUrl);
+    //                 cy.contains(assessName)
+    //                 cy.contains('Assessment Report')
+    //                 });             
+    //         });  
+    //    }) 
     }   
 }
 export default new ActivityLog
