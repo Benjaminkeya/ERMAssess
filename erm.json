@@ -2,25 +2,25 @@
   
   "OwnerRole":{
     "email": "benjamin.keya@pixeledge.io",
-    "password": "Benjamin@1",
+    "password": "",
     "wrongEmail":"benjaminn@pixeledge.io",
-    "wrongpassword":"Benjamin@11ß"
+    "wrongpassword":""
   },
   "AdminRole":{
     "email":"benjamin.keya+122@pixeledge.io",
-    "password":"Benjamin@1"
+    "password":""
   },
   "MemberRole":{
     "email":"benjamin.keya+125@pixeledge.io",
-    "password":"Benjamin@1"
+    "password":""
   },
   "CertifierRole":{
     "email":"benjamin.keya+123@pixeledge.io",
-    "password":"Benjamin@1"
+    "password":""
   },
   "ContributorRole":{
     "email":"benjamin.keya+124@pixeledge.io",
-    "password":"Benjamin@1"
+    "password":""
   },
   "Name":"CypressTestName+QA-",
   "Address":"Cypress Test Address",
