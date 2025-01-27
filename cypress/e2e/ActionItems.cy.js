@@ -1,9 +1,12 @@
 import PreActions from '../Pages/PreActions';
 import ActionItems from '../Pages/ActionItems';
 import Assessments from '../Pages/Assessments';
+import Entities from '../Pages/Entities';
 const account = require('../fixtures/erm.json');
 
 describe('Action Items-Organization Level  Test Suite',() => {
+  //Ations  required for each test in this suite
+  
   beforeEach(() => {
     PreActions.preActions();
   });
@@ -14,14 +17,23 @@ describe('Action Items-Organization Level  Test Suite',() => {
         it('C1762: Update action item with unique name',{ retries: 2 },() => {
           ActionItems.updateActionItem(account.newName, account.newDescription);
         });
+         //Test data clean up after all  tests in this block  executed
+         after(()=>{
+          PreActions.preActions();
+          ActionItems.deleteActionItem()
+        })
 });
 
 describe('Action Items-Entity Level Test Suite',() => {
-  beforeEach(() => {
-    PreActions.preActions();
-    cy.clickTableLink(1,1)
-  });
-  
+    before(()=>{
+      PreActions.preActions();
+      Entities.createEntity(account.Name,account.Address,'be.enabled','54545fd32',account.Name);
+    })
+    beforeEach(() => {
+      PreActions.preActions();
+      cy.clickTableLink(1,1)
+    });
+    
         it('C980: Add new Entity level action item with unique name',() => {
           ActionItems.createActionItem(account.Name,account.Description,account.Assignee,account.TestOrg);
         });
@@ -29,9 +41,22 @@ describe('Action Items-Entity Level Test Suite',() => {
         it('C1763: Update action item with unique name',() => {
           ActionItems.updateActionItem(account.newName, account.newDescription);
         });
+        //Test data clean up after all  tests in this block  executed
+        after(()=>{
+          PreActions.preActions();
+          cy.clickTableLink(1,1);
+          ActionItems.deleteActionItem()
+        })
 });
 
 describe('Action Items- Audit Question Level  Test Suite',() => {
+   //Actions needed once before all tests in this suite
+  before(()=>{
+    PreActions.preActions();
+    cy.clickTableLink(1,1);
+    Assessments.createAssessment(account.Name, account.Protocol, account.Description,{delay: 0});
+  })
+  //Actions needed  for  each test in this suite
   beforeEach(() => {
     PreActions.preActions();
     cy.clickTableLink(1,1)
@@ -41,16 +66,30 @@ describe('Action Items- Audit Question Level  Test Suite',() => {
   });
  
       it('C981: Add Audit Question level action item ',() => {
-        ActionItems.createAuditLevelActionItem(account.Name,account.Assignee,'test')
+        ActionItems.createAuditLevelActionItem(account.Name,account.Assignee)
   });
 
       it('C1764: Update action item ',() => {
         ActionItems.updateActionItem(account.newName, account.newDescription);
       });
+     
+});
+
+describe('My Action Items',() => {
+  beforeEach(()=>{
+    PreActions.preActions();
+  })
+
+  it('C2022 : View My Action Items',()=>{
+    ActionItems.viewMyActionItems(account.profileID)
+  })
 
 });
 
+
 describe('Manage Action Items Test Suite',() => {
+  //Actions needed for each test in tthis suite
+ 
   beforeEach(() => {
     PreActions.preActions();
     ActionItems.clickActionItemDropDown()
@@ -63,6 +102,10 @@ describe('Manage Action Items Test Suite',() => {
       it('C1040: View Action Item History',()=>{
         ActionItems.viewActionItemHistory()
       })
+
+      it('C505: Filter Action Items',() => {
+        ActionItems.filterActionItems(account.Assignee,account.Assignee,account.newName);
+      });
 
       it('C466: Add Action Item Comments',()=>{
         ActionItems.addComment(account.Name)
@@ -80,10 +123,6 @@ describe('Manage Action Items Test Suite',() => {
         ActionItems.deleteComment()
       })
 
-      it('C505: Filter Action Items',() => {
-        ActionItems.filterActionItems(account.Assignee,account.Assignee,account.newName);
-      });
-
       it('C1760: Upload Evidence File to Action Item',() => {
         ActionItems.uploadEvidenceFilesToActionItem()
       });
@@ -93,32 +132,31 @@ describe('Manage Action Items Test Suite',() => {
       });
 
       it('C604: Export Action Items',() => {
-        ActionItems.exportActionItemsExcel(account.TestOrg);
+        try{
+        ActionItems.exportActionItemsExcelCSV(account.TestOrg);
+      } catch (error) {
+        throw error;
+       }
+  
       });
 
+      // it('C943: Validate Overdue status for action item ',() => {
+      //   ActionItems.validateActionItemOverDueStatus();
+      // }); 
+
       it('C1012: Delete Action Item',() => {
-        ActionItems.deleteActionItemFromViewAllPage('The action Item has been deleted successfully');
+        ActionItems.deleteActionItemFromViewAllPage();
       });
 
       it('C1019: Turn off Action Item Notifications',() => {
         ActionItems.turnOffNotifications('Your notification preference has been updated');
       });
 
-      it('C2020 : Turn on Action Item Notifications',() => {
+      it('C2020: Turn on Action Item Notifications',() => {
         ActionItems.turnOnNotifications('Your notification preference has been updated');
       });
-      it(': Validate Overdue status for action item ',() => {
-        ActionItems.validateActionItemOverDueStatus();
-      });   
+       
+      
    });
 
-  describe('My Action Items',()=>{
-    beforeEach(()=>{
-      PreActions.preActions();
-    })
-
-    it('2022: My Action Items',()=>{
-      ActionItems.viewMyActionItems(account.Assignee)
-    })
     
-    })

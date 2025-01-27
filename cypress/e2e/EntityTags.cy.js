@@ -12,16 +12,12 @@ describe('Manage Entity Tags Test Suite',() => {
   });
 
   it('C2005 :Add Entity Tag',() => {
-    ManageAccount.addTag(account.Name,account.Description);
+    ManageAccount.addEntityTag(account.Name,account.Description);
   });
   it('C2006 :Update Entity Tag',() => {
-    ManageAccount.updateTag(account.newName);
+    ManageAccount.updateEntityTag(account.newName);
   });
-  it('C2007	:Delete Entity Tag',() => {
-    ManageAccount.deleteTag()
+  it('C2007 :Delete Entity Tag',() => { 
+    ManageAccount.deleteEntityTag()
   });
-  it('Add Entity Tag for entity Creation test',() => {
-    ManageAccount.addTag(account.Name,account.Description);
-  });
-  
 });

@@ -12,7 +12,7 @@ it('C968: Activity Log page validation',() => {
   ActivityLog.ValidateActivityLogPage()
 });
 it('C968: Activity Log-Review Assessment ',()=>{
-  ActivityLog.reviewActivityLogPage()
+ ActivityLog.reviewActivityLogPage()
 })
 it('C1758: Activity Log - View Assessment ',()=>{
   ActivityLog.viewActivityLogAssessment()
